@@ -1,0 +1,121 @@
+---
+title: JavaScript 的原理
+date: '2025-06-22'
+lastmod: '2025-06-22'
+tags: ['JavaScript', '基础原理']
+draft: false
+summary: 深入理解 JavaScript 的执行机制、执行上下文和调用栈的工作原理。
+---
+
+# Functions (函数)
+
+**函数**是 JavaScript 中可执行代码的基本单元。它们本身只是存储在内存中的对象，但在被**调用 (invoked)** 时，就成为了整个执行流程的触发器。每当一个函数被调用，它就会请求 JavaScript 引擎为它创建一个专属的运行环境，也就是一个新的**执行上下文**。
+
+---
+
+# Execution Context (执行上下文)
+
+**执行上下文**是 JavaScript 引擎执行代码时所需的完整**环境**。把它想象成一个独立的盒子，每个盒子都包含两样东西：
+
+1. **内存空间 (Memory / Variable Environment)**：这个部分用来存储当前上下文中声明的所有变量、函数和参数。在上下文的“创建阶段”，JavaScript 引擎会扫描代码，找到所有声明并在这个内存空间中为它们分配好位置（这就是所谓的“变量提升”）。
+
+2. **执行线程 (Thread of Execution)**：这个部分负责逐行读取、解析并执行代码。在上下文的“执行阶段”，执行线程会一行一行地运行你的逻辑。
+
+因此，当代码执行时，实际上是**执行线程**在操作**内存空间**中的数据。
+
+> [!info] 两种执行上下文
+>
+> - **全局执行上下文**：为整个脚本创建，包含全局变量和函数
+> - **函数执行上下文**：为每个函数调用创建，包含该函数的局部变量和参数。
+
+---
+
+# Call Stack (调用栈)
+
+**调用栈**（或称执行栈）是一个具有**后进先出 (LIFO)** 特点的数据结构，专门用来**管理和追踪**所有执行上下文。为了更好地理解，我们来看一个具体的例子：
+
+**示例代码:**
+
+```js
+function functionB() {
+  // 断点 3: 进入 functionB
+  console.log('In B');
+}
+
+function functionA() {
+  // 断点 2: 进入 functionA
+  console.log('Calling B');
+  functionB();
+  console.log('Returned from B');
+}
+
+// 断点 1: 脚本开始
+console.log('Script Start');
+functionA();
+console.log('Script End');
+```
+
+下面是上面代码执行时，调用栈的变化过程的可视化图解：
+
+1. 脚本开始执行，`functionA()` 即将被调用。此时，只有全局执行上下文在调用栈中。
+
+```mermaid
+graph TD
+    subgraph 调用栈
+        style Global_EC fill:#f9f,stroke:#333,stroke-width:2px
+        Global_EC[全局执行上下文]
+    end
+```
+
+2. 调用 `functionA()`，`functionA` 的执行上下文被创建并压入栈顶。引擎现在开始执行 `functionA` 内部的代码。
+
+```mermaid
+graph TD
+    subgraph 调用栈
+        direction TB
+        style EC_A fill:#bbf,stroke:#333,stroke-width:2px
+        style Global_EC fill:#f9f,stroke:#333,stroke-width:2px
+
+        EC_A[函数 A 的执行上下文] --> Global_EC[全局执行上下文]
+    end
+```
+
+3. 在 `functionA` 内部调用 `functionB()`，`functionB` 的执行上下文被创建并压入栈顶。引擎暂停执行 `functionA`，转而开始执行 `functionB` 的代码。
+
+```mermaid
+graph TD
+    subgraph 调用栈
+        direction TB
+        style EC_B fill:#bfa,stroke:#333,stroke-width:2px
+        style EC_A fill:#bbf,stroke:#333,stroke-width:2px
+        style Global_EC fill:#f9f,stroke:#333,stroke-width:2px
+
+        EC_B[函数 B 的执行上下文] --> EC_A[函数 A 的执行上下文] --> Global_EC[全局执行上下文]
+    end
+```
+
+4. `functionB()` 执行完毕并返回，`functionB` 的执行上下文从栈顶被弹出。控制权交还给 `functionA`，从它上次暂停的地方继续执行。
+
+```mermaid
+graph TD
+    subgraph 调用栈
+        direction TB
+        style EC_A fill:#bbf,stroke:#333,stroke-width:2px
+        style Global_EC fill:#f9f,stroke:#333,stroke-width:2px
+
+        EC_A[函数 A 的执行上下文] --> Global_EC[全局执行上下文]
+    end
+```
+
+5. `functionA()` 执行完毕并返回，`functionA` 的执行上下文也被弹出。控制权交还给全局执行上下文。
+
+```mermaid
+graph TD
+    subgraph 调用栈
+        direction TB
+        style Global_EC fill:#f9f,stroke:#333,stroke-width:2px
+        Global_EC[全局执行上下文]
+    end
+```
+
+最后，当所有全局代码执行完毕，全局执行上下文也从栈中弹出，调用栈清空，程序结束。
