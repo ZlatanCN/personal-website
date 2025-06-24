@@ -1,6 +1,6 @@
 import {
-  defineDocumentType,
   ComputedFields,
+  defineDocumentType,
   makeSource,
 } from 'contentlayer2/source-files';
 import { writeFileSync } from 'fs';
@@ -12,10 +12,10 @@ import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import {
-  remarkExtractFrontmatter,
-  remarkCodeTitles,
-  remarkImgToJsx,
   extractTocHeadings,
+  remarkCodeTitles,
+  remarkExtractFrontmatter,
+  remarkImgToJsx,
 } from 'pliny/mdx-plugins/index.js';
 import remarkCallout from '@r4ai/remark-callout';
 // Rehype packages
@@ -92,7 +92,9 @@ function createSearchIndex(allBlogs) {
     siteMetadata.search.kbarConfig.searchDocumentsPath
   ) {
     writeFileSync(
-      `public/${path.basename(siteMetadata.search.kbarConfig.searchDocumentsPath)}`,
+      `public/${path.basename(
+        siteMetadata.search.kbarConfig.searchDocumentsPath,
+      )}`,
       JSON.stringify(allCoreContent(sortPosts(allBlogs))),
     );
     console.log('Local search index generated...');
