@@ -114,17 +114,32 @@ export default function PostLayout({
                         </dd>
                         <dt className={'sr-only'}>Twitter</dt>
 
+                        {/*<dd>*/}
+                        {/*  {author.twitter && (*/}
+                        {/*    <Link*/}
+                        {/*      href={author.twitter}*/}
+                        {/*      className={*/}
+                        {/*        'text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'*/}
+                        {/*      }*/}
+                        {/*    >*/}
+                        {/*      {author.twitter*/}
+                        {/*        .replace('https://twitter.com/', '@')*/}
+                        {/*        .replace('https://x.com/', '@')}*/}
+                        {/*    </Link>*/}
+                        {/*  )}*/}
+                        {/*</dd>*/}
                         <dd>
-                          {author.twitter && (
+                          {author.github && (
                             <Link
-                              href={author.twitter}
+                              href={author.github}
                               className={
                                 'text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
                               }
                             >
-                              {author.twitter
-                                .replace('https://twitter.com/', '@')
-                                .replace('https://x.com/', '@')}
+                              {author.github.replace(
+                                'https://github.com/',
+                                '@',
+                              )}
                             </Link>
                           )}
                         </dd>
