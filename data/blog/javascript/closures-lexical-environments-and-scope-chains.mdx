@@ -1,10 +1,10 @@
 ---
 title: 闭包、词法环境与作用域链
 date: '2025-06-14'
-lastmod: '2025-06-24'
-tags: ['JavaScript']
+lastmod: '2025-07-06'
+tags: ['Frontend', 'JavaScript']
 draft: false
-summary: 本文深入讲解了 JavaScript 中闭包 (Closure) 的工作原理，重点围绕词法环境 (Lexical Environment) 和作用域链的构建过程。通过详细的执行步骤说明，展示了函数如何“记住”其创建时的环境，并在后续调用时依然能够访问该环境中的变量。
+summary: 深入解释了闭包的核心概念——函数与创建时词法环境的绑定，并通过一个示例代码详细拆解了闭包的生命周期（函数创建、环境幸存、作用域链形成及变量查找过程），最后区分了规范中的 [[Environment]] 属性与浏览器开发者工具中 [[Scopes]] 的不同。
 ---
 
 # 闭包与词法环境

@@ -77,6 +77,16 @@
     border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
   }
+
+  /* 为标题添加滚动边距以调整锚点链接的定位 */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    scroll-margin-top: 8rem;
+  }
 }
 
 @layer utilities {

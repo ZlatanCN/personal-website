@@ -1,8 +1,8 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Zhu Jiayou',
+  title: 'Jiayou',
   author: 'Zhu Jiayou',
-  headerTitle: 'Zhu Jiayou',
+  headerTitle: 'Jiayou.dev',
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'zh-CN',
   theme: 'system', // system, dark or light

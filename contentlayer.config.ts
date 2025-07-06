@@ -3,7 +3,6 @@ import {
   defineDocumentType,
   makeSource,
 } from 'contentlayer2/source-files';
-import { writeFileSync } from 'fs';
 import readingTime from 'reading-time';
 import { slug } from 'github-slugger';
 import path from 'path';
@@ -68,6 +67,7 @@ const computedFields: ComputedFields = {
  */
 async function createTagCount(allBlogs) {
   const tagCount: Record<string, number> = {};
+
   allBlogs.forEach((file) => {
     if (file.tags && (!isProduction || file.draft !== true)) {
       file.tags.forEach((tag) => {
