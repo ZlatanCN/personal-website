@@ -12,7 +12,7 @@ const AuthorDetails = memo(({ authorDetails }: AuthorDetailsProps) => {
   return (
     <dl
       className={
-        'pt-6 pb-10 xl:self-start xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700'
+        'pt-6 pb-10 xl:self-start xl:border-b xl:border-gray-200 xl:pt-10 xl:dark:border-gray-700'
       }
     >
       <dt className={'sr-only'}>Authors</dt>

@@ -1,14 +1,19 @@
 import { memo } from 'react';
-import { Toc } from 'pliny/mdx-plugins';
+import { type Toc } from 'pliny/mdx-plugins';
 import Link from 'next/link';
 
 type TableOfContentsProps = {
   toc: Toc;
+  activeId: string;
 };
 
-const TableOfContents = memo(({ toc }: TableOfContentsProps) => {
+const TableOfContents = memo(({ toc, activeId }: TableOfContentsProps) => {
   return (
-    <div className={'hidden xl:sticky xl:top-31 xl:mt-7 xl:flex'}>
+    <div
+      className={
+        'hidden xl:sticky xl:top-31 xl:mt-10 xl:flex xl:justify-center'
+      }
+    >
       <div
         className={
           'space-y-4 rounded-lg bg-gray-100/50 p-4 dark:bg-gray-800/50'
@@ -22,7 +27,10 @@ const TableOfContents = memo(({ toc }: TableOfContentsProps) => {
             <li key={item.value}>
               <Link
                 href={item.url}
-                className={`hover:text-primary-500 block text-xs transition-colors ${item.depth === 2 ? 'pl-4' : ''}`}
+                style={{
+                  paddingLeft: `${item.depth > 1 ? item.depth * 0.5 : 0}rem`,
+                }}
+                className={`hover:text-primary-500 block text-xs transition-colors ${activeId == item.url.slice(1) ? 'text-primary-500 font-semibold' : ''}`}
               >
                 {item.value}
               </Link>
