@@ -1,5 +1,6 @@
 import {
   Bluesky,
+  Douyin,
   Facebook,
   Github,
   Instagram,
@@ -26,6 +27,7 @@ const components = {
   instagram: Instagram,
   medium: Medium,
   bluesky: Bluesky,
+  douyin: Douyin,
 };
 
 type SocialIconProps = {
