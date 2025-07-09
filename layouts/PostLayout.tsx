@@ -51,12 +51,16 @@ export default function PostLayout({
         const id = item.url.slice(1);
         return document.getElementById(id);
       })
-      .filter((heading) => heading !== null);
+      .filter((heading: HTMLElement | null) => heading !== null);
 
-    headingElements.forEach((heading) => observer.observe(heading));
+    headingElements.forEach((heading: HTMLElement) =>
+      observer.observe(heading),
+    );
 
     return () => {
-      headingElements.forEach((heading) => observer.unobserve(heading));
+      headingElements.forEach((heading: HTMLElement) =>
+        observer.unobserve(heading),
+      );
       observer.disconnect();
     };
   }, [toc]);

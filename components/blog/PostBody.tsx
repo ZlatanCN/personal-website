@@ -10,8 +10,9 @@ type PostBodyProps = {
   slug: string;
 };
 
-const editUrl = (path) => `${siteMetadata.siteRepo}/blob/main/data/${path}`;
-const discussUrl = (path) =>
+const editUrl = (path: string) =>
+  `${siteMetadata.siteRepo}/blob/master/data/${path}`;
+const discussUrl = (path: string) =>
   `https://mobile.twitter.com/search?q=${encodeURIComponent(
     `${siteMetadata.siteUrl}/${path}`,
   )}`;
@@ -23,10 +24,10 @@ const PostBody = memo(({ children, slug, path, filePath }: PostBodyProps) => {
         {children}
       </div>
       <div className={'pt-6 pb-6 text-sm text-gray-700 dark:text-gray-300'}>
-        <Link href={discussUrl(path)} rel={'nofollow'}>
-          Discuss on Twitter
-        </Link>
-        {` • `}
+        {/*<Link href={discussUrl(path)} rel={'nofollow'}>*/}
+        {/*  Discuss on Twitter*/}
+        {/*</Link>*/}
+        {/*{` • `}*/}
         <Link href={editUrl(filePath)}>View on GitHub</Link>
       </div>
       {siteMetadata.comments && (
