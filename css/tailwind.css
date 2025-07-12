@@ -2,7 +2,9 @@
 
 @plugin "@tailwindcss/forms";
 @plugin '@tailwindcss/typography';
-@plugin 'tailwind-scrollbar';
+@plugin 'tailwind-scrollbar' {
+  nocompatible: true;
+};
 @source '../node_modules/pliny';
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -582,4 +584,8 @@ details[data-callout][open] > summary[data-callout-title]::after {
 
 [data-callout][data-callout-type="cite"] > [data-callout-title]:empty::after {
   content: "Cite";
+}
+
+.scrollbar-thumb {
+  @apply scrollbar-thumb-gray-100 scrollbar-hover:scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-900 dark:scrollbar-hover:scrollbar-thumb-gray-800
 }

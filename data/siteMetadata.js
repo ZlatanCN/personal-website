@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'Jiayou.dev',
   author: 'Zhu Jiayou',
   headerTitle: 'Jiayou.dev',
-  description: 'A blog created with Next.js and Tailwind.css',
+  description: 'My code, my blog, my life.',
   language: 'zh-CN',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',

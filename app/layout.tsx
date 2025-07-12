@@ -67,7 +67,7 @@ export default function RootLayout({
   return (
     <html
       lang={siteMetadata.language}
-      className={`${space_grotesk.variable} scrollbar scrollbar-thumb-gray-100 scrollbar-hover:scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-900 dark:scrollbar-hover:scrollbar-thumb-gray-800 overflow-auto scroll-smooth`}
+      className={`${space_grotesk.variable} scrollbar scrollbar-thumb overflow-auto scroll-smooth`}
       suppressHydrationWarning
     >
       <link

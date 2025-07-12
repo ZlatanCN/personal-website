@@ -10,16 +10,14 @@ type TableOfContentsProps = {
 const TableOfContents = memo(({ toc, activeId }: TableOfContentsProps) => {
   return (
     <div
-      className={
-        'hidden overflow-auto xl:sticky xl:top-31 xl:mt-10 xl:flex xl:justify-end'
-      }
+      className={'hidden xl:sticky xl:top-31 xl:mt-10 xl:flex xl:justify-end'}
     >
       <div
-        className={'space-y-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-900/70'}
+        style={{ maxHeight: 'calc(100vh - 10rem)' }}
+        className={
+          'scrollbar scrollbar-w-2 scrollbar-thumb-rounded-full scrollbar-thumb w-full space-y-4 overflow-auto rounded-lg bg-gray-50 p-4 dark:bg-gray-900/70'
+        }
       >
-        <h2 className={'text-lg font-bold text-gray-900 dark:text-gray-100'}>
-          Table of Contents
-        </h2>
         <ul className={'space-y-4'}>
           {toc.map((item) => (
             <li key={item.value}>
