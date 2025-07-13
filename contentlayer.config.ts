@@ -10,6 +10,7 @@ import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic';
 // Remark packages
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
+import remarkMermaid from './lib/remark-mermaid';
 import {
   extractTocHeadings,
   remarkCodeTitles,
@@ -166,6 +167,7 @@ export default makeSource({
       remarkMath,
       remarkImgToJsx,
       remarkCallout,
+      remarkMermaid,
     ],
     rehypePlugins: [
       rehypeSlug,

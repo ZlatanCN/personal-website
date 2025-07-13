@@ -58,17 +58,17 @@ console.log('Script End');
 
 1. 脚本开始执行，`functionA()` 即将被调用。此时，只有全局执行上下文在调用栈中。
 
-<Mermaid chart={`
+```mermaid
 graph TD
     subgraph 调用栈
         style Global_EC fill:#f9f,stroke:#333,stroke-width:2px
         Global_EC[全局执行上下文]
     end
-`}/>
+```
 
 2. 调用 `functionA()`，`functionA` 的执行上下文被创建并压入栈顶。引擎现在开始执行 `functionA` 内部的代码。
 
-<Mermaid chart={`
+```mermaid
 graph TD
     subgraph 调用栈
         direction TB
@@ -77,11 +77,11 @@ graph TD
 
         EC_A[函数 A 的执行上下文] --> Global_EC[全局执行上下文]
     end
-`}/>
+```
 
 3. 在 `functionA` 内部调用 `functionB()`，`functionB` 的执行上下文被创建并压入栈顶。引擎暂停执行 `functionA`，转而开始执行 `functionB` 的代码。
 
-<Mermaid chart={`
+```mermaid
 graph TD
     subgraph 调用栈
         direction TB
@@ -91,11 +91,11 @@ graph TD
 
         EC_B[函数 B 的执行上下文] --> EC_A[函数 A 的执行上下文] --> Global_EC[全局执行上下文]
     end
-`}/>
+```
 
 4. `functionB()` 执行完毕并返回，`functionB` 的执行上下文从栈顶被弹出。控制权交还给 `functionA`，从它上次暂停的地方继续执行。
 
-<Mermaid chart={`
+```mermaid
 graph TD
     subgraph 调用栈
         direction TB
@@ -104,17 +104,17 @@ graph TD
 
         EC_A[函数 A 的执行上下文] --> Global_EC[全局执行上下文]
     end
-`}/>
+```
 
 5. `functionA()` 执行完毕并返回，`functionA` 的执行上下文也被弹出。控制权交还给全局执行上下文。
 
-<Mermaid chart={`
+```mermaid
 graph TD
     subgraph 调用栈
         direction TB
         style Global_EC fill:#f9f,stroke:#333,stroke-width:2px
         Global_EC[全局执行上下文]
     end
-`}/>
+```
 
 最后，当所有全局代码执行完毕，全局执行上下文也从栈中弹出，调用栈清空，程序结束。

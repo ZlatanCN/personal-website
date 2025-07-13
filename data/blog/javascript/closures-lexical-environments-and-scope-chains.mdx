@@ -18,14 +18,13 @@ summary: 深入解释了闭包的核心概念——函数与创建时词法环�
 > 1. **环境记录 (Environment Record)**：一个“字典”，存储当前作用域中所有的局部变量、函数等。
 > 2. **外部词法环境的引用 (Outer Reference)**：一个“指针”，指向父级作用域的词法环境，从而将作用域链接起来。
 >
-> 其结构可以这样可视化：
-> <Mermaid chart={`
+> ```mermaid
 > graph TD
 >    subgraph "词法环境 (Lexical Environment)"
 >        A["<b>环境记录 (Environment Record)</b><br/>存储 money, a, b 等变量"]
 >        B("<b>外部词法环境的引用 (Outer)</b>") --> C["(指向父级词法环境)"]
 >    end
-> `}/>
+> ```
 
 # 闭包的生命周期
 
@@ -79,7 +78,7 @@ myFunc();
 
 此刻，内存中的关系如下所示，一条**作用域链**就形成了：
 
-<Mermaid chart={`
+```mermaid
 sequenceDiagram
     participant Engine as JavaScript 执行引擎
     participant Closure as 闭包函数对象 (myFunc)
@@ -106,13 +105,13 @@ sequenceDiagram
         Engine->>OuterLE: 9. 沿作用域链, 在外部环境查找
         OuterLE-->>Engine: 10. 找到 "money" 的值
     end
-`}/>
+```
 
 ## 步骤 4: 变量的查找
 
 执行 `console.log(money)` 时，JavaScript 引擎会沿着刚刚形成的作用域链开始查找 `money`：
 
-<Mermaid chart={`
+```mermaid
 graph LR
     subgraph "变量查找路径 (作用域链)"
         A(myFunc 的词法环境) -- "在自身环境记录中查找<br/>(找不到 money)" --> B(outer 的词法环境)
@@ -124,7 +123,7 @@ graph LR
     style B fill:#bfa,stroke:#333
     style C fill:#f9f,stroke:#333
     style D fill:#fef,stroke:#333,stroke-width:2px
-`}/>
+```
 
 # `[[Environment]]` vs `[[Scopes]]`
 

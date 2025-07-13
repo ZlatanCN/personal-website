@@ -1,0 +1,95 @@
+---
+title: Promise 与 Event Loop
+date: '2025-06-15'
+lastmod: '2025-07-06'
+tags: [前端开发, JavaScript]
+draft: false
+summary: 探讨 JavaScript 中 Promise 的内部结构、链式调用机制，以及 Event Loop 如何调度异步任务，帮助理解前端异步编程的核心原理。
+---
+# Promise
+
+**Promise** 是 JavaScript 中处理异步操作的核心对象。它代表一个尚未完成但最终会完成（或失败）的操作及其结果值。可以将它理解为一个“承诺”或一个未来值的“占位符”。
+
+以 `fetch` 为例，当我们调用 `fetch('/api')` 时，会执行两件事：
+
+1. **浏览器层面**：浏览器的网络模块（这是一个独立于 JS 引擎的 Web API）接收指令，在后台发起一个真实的 HTTP 网络请求。
+2. **JS 层面**：`fetch` 函数会**立即、同步地**返回一个 **Promise 对象**。这个对象此时的状态是 **`pending` (进行中)**，它承诺在未来网络请求有结果时通知我们。
+
+## Promise 的内部结构
+
+一个 Promise 对象在内部维护着它的状态和结果，可以通过一个心智模型来理解其核心构成：
+
+- **`[[PromiseState]]`**: 内部状态，**状态一旦改变，就不能再变**。有三种可能：
+  - `pending`：进行中，初始状态。
+  - `fulfilled`：已成功，操作成功完成。
+  - `rejected`：已失败，操作失败。
+
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> pending: 创建
+    pending --> fulfilled: resolve(value)
+    pending --> rejected: reject(reason)
+    fulfilled --> [*]: 结束
+    rejected --> [*]: 结束
+```
+
+- **`[[PromiseResult]]`**: 内部结果，存储着操作成功后的**值 (value)** 或失败后的**原因 (reason)**。
+
+- **`[[PromiseFulfillReactions]]` / `[[PromiseRejectReactions]]`**: 两个内部列表，用于存放通过 `.then()` 或 `.catch()` 注册的、将在 Promise 状态变为 `fulfilled` 或 `rejected` 后执行的**回调函数**。
+
+> [!tip] 注册回调
+>
+> 我们通过 `.then()` 和 `.catch()` 方法来“订阅” Promise 的最终结果。
+>
+> - `.then(onFulfilled, onRejected)`: 分别注册成功和失败的回调。
+> - `.catch(onRejected)`: 只是 `.then(null, onRejected)` 的语法糖，专门用于注册失败回调。
+
+## 链式调用
+
+每当调用 `.then` 或 `.catch` 时，它都会**返回一个全新的 Promise 对象**。这个特性是实现链式调用的基础，它允许我们将多个异步操作优雅地串联起来。
+
+```js
+const promise1 = fetch('/api/data');
+
+// promise2 是 .then() 返回的一个全新的 Promise
+const promise2 = promise1.then(data => {
+  console.log(data);
+  return 'some new value'; // 这个返回值会成为 promise2 的成功结果
+});
+
+// promise3 是第二个 .then() 返回的又一个全新的 Promise
+const promise3 = promise2.then(newValue => {
+  console.log(newValue); // 输出 'some new value'
+});
+```
+
+# Event Loop：异步的调度中心
+
+当一个 Promise 准备就绪（例如，网络请求已返回），它的回调函数并不会立即执行。相反，它会被放入一个特定的队列，等待 Event Loop 的调度。
+
+JavaScript 的异步机制由**宏任务 (Macrotask)** 和 **微任务 (Microtask)** 共同驱动：
+
+- **宏任务 (Macrotask)**: 包括 `script` (整个脚本)、`setTimeout`、`setInterval`、I/O 操作、UI 事件等。
+- **微任务 (Microtask)**: 包括 `Promise.prototype.then/catch/finally`、`queueMicrotask` 等。
+
+> [!important] 执行一个宏任务 -> 清空所有微任务
+>
+> 在任意一个事件循环周期 (tick) 中，引擎会先从**宏任务队列**中取**一个**任务执行 (第一个是 `script`)。在该宏任务执行完毕后，引擎会**立即**检查并**清空整个微任务队列**，然后才可能进行UI渲染，并接着开始下一个宏任务。
+>
+> ```mermaid
+> graph TD
+>     subgraph Event Loop 循环
+>         direction LR
+>         A(开始) --> B{宏任务队列有任务?}
+>         B -- "有" --> C[取一个宏任务执行]
+>         C --> D{微任务队列有任务?}
+>         D -- "有" --> E[循环清空所有微任务]
+>         E --> F[UI 渲染]
+>         F --> B
+>         D -- "没有" --> F
+>         B -- "没有" --> G(等待新任务)
+>         G --> B
+>     end
+> ```
+

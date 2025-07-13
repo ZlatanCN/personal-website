@@ -4,7 +4,7 @@
 @plugin '@tailwindcss/typography';
 @plugin 'tailwind-scrollbar' {
   nocompatible: true;
-};
+}
 @source '../node_modules/pliny';
 @custom-variant dark (&:where(.dark, .dark *));
 
