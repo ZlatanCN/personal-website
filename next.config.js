@@ -101,5 +101,8 @@ module.exports = () => {
 
       return config;
     },
+    // experimental: {
+    //   useLightningcss: true,
+    // },
   });
 };
