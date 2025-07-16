@@ -14,6 +14,15 @@ const Mermaid = memo(({ chart }: MermaidProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const uniqueId = useId();
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(chart);
+      setCopied(true);
+    } catch (error) {
+      console.error('Failed to copy text:', error);
+    }
+  };
+
   useEffect(() => {
     if (ref.current) {
       mermaid.initialize({});
@@ -24,10 +33,6 @@ const Mermaid = memo(({ chart }: MermaidProps) => {
       });
     }
   }, [chart, uniqueId]);
-
-  useEffect(() => {
-    console.log('copied state:', copied);
-  }, [copied]);
 
   return (
     <div
@@ -41,9 +46,14 @@ const Mermaid = memo(({ chart }: MermaidProps) => {
       <div ref={ref} className={'flex items-center'} />
       {showButton && (
         <button
-          className={`absolute top-2 right-2 h-8 w-8 cursor-pointer rounded border-2 bg-transparent p-1 ${copied ? 'border-green-400 focus:border-green-400 focus:outline-none' : 'border-gray-700 dark:border-gray-300'}`}
+          className={`absolute top-2 right-2 size-8 cursor-pointer rounded border-2 bg-transparent p-1 ${
+            copied
+              ? 'border-green-400 focus:border-green-400 focus:outline-none'
+              : 'border-gray-700 dark:border-gray-300'
+          }`}
+          onClick={handleCopy}
         >
-          <Clipboard onClick={() => setCopied(true)} copied={copied} />
+          <Clipboard copied={copied} />
         </button>
       )}
     </div>
