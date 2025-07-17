@@ -1,7 +1,7 @@
 import { visit } from 'unist-util-visit';
 
 const remarkMermaid = () => {
-  return (tree: any) => {
+  return (tree) => {
     visit(tree, 'code', (node) => {
       if (node.lang === 'mermaid') {
         node.type = 'mdxJsxFlowElement';

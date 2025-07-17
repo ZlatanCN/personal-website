@@ -10,6 +10,7 @@ export default function Comments({ slug }: { slug: string }) {
   if (!siteMetadata.comments?.provider) {
     return null;
   }
+
   return (
     <>
       {loadComments ? (
