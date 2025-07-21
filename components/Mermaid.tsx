@@ -2,7 +2,7 @@
 
 import { memo, useEffect, useId, useRef, useState } from 'react';
 import mermaid from 'mermaid';
-import { Clipboard } from '@/components/icons/Clipboard';
+import { Clipboard } from '@/components/icons';
 
 type MermaidProps = {
   chart: string;

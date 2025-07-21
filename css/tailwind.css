@@ -118,6 +118,21 @@
     & :where(code):not(pre code) {
       color: var(--color-indigo-500);
     }
+
+    /*
+        Remove the default `::before` and `::after` pseudo-elements
+        that are added by Tailwind CSS Typography plugin to code elements.
+        This is to prevent the addition of quotes around inline code
+        when not used within prose.
+     */
+
+    :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before {
+      content: none;
+    }
+
+    :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
+      content: none;
+    }
   }
 
   .prose-invert {
