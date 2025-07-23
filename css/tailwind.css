@@ -115,16 +115,7 @@
       font-weight: 600;
     }
 
-    & :where(code):not(pre code) {
-      color: var(--color-indigo-500);
-    }
-
-    /*
-        Remove the default `::before` and `::after` pseudo-elements
-        that are added by Tailwind CSS Typography plugin to code elements.
-        This is to prevent the addition of quotes around inline code
-        when not used within prose.
-     */
+    /* 移除 inline code 的前后的单引号 */
 
     :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before {
       content: none;
@@ -152,6 +143,16 @@
       color: var(--color-gray-100);
     }
   }
+}
+
+/* 行内代码样式 */
+code:not(pre code) {
+  @apply text-[#222222] bg-gray-50 px-[0.3em] py-[0.15em] rounded-[4px] font-[0.875em] dark:text-[#DADADA] dark:bg-gray-800;
+}
+
+/* 代码块样式 */
+pre {
+  @apply bg-gray-50 dark:bg-gray-900
 }
 
 .task-list-item::before {
