@@ -4,7 +4,8 @@ import siteMetadata from '@/data/siteMetadata';
 export const dynamic = 'force-static';
 
 const handler = NewsletterAPI({
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   provider: siteMetadata.newsletter.provider,
 });
 

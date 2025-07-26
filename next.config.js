@@ -95,14 +95,17 @@ module.exports = () => {
         test: /\.svg$/,
         use: ['@svgr/webpack'],
       });
-      config.plugins.push(
-        codeInspectorPlugin({ bundler: 'webpack', editor: 'webstorm' }),
-      );
+
+      if (dev) {
+        config.plugins.push(
+          codeInspectorPlugin({ bundler: 'webpack', editor: 'webstorm' }),
+        );
+      }
 
       return config;
     },
-    // experimental: {
-    //   useLightningcss: true,
-    // },
+    experimental: {
+      optimizeCss: true,
+    },
   });
 };

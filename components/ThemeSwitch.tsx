@@ -21,7 +21,7 @@ const ThemeSwitch = memo(() => {
         setTheme('system');
         break;
     }
-  }, [theme]);
+  }, [setTheme, theme]);
 
   useEffect(() => setMounted(true), []);
 

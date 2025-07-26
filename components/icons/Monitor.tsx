@@ -1,8 +1,6 @@
 import { memo } from 'react';
 
-type MonitorProps = {};
-
-const Monitor = memo(({}: MonitorProps) => {
+const Monitor = memo(() => {
   return (
     <svg
       xmlns={'http://www.w3.org/2000/svg'}

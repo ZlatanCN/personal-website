@@ -49,7 +49,7 @@ export default [
 
     rules: {
       'prettier/prettier': 'error',
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/jsx-curly-brace-presence': [
         'error',
@@ -58,6 +58,7 @@ export default [
           children: 'never',
         },
       ],
+      '@typescript-eslint/ban-ts-comment': 'warn',
     },
   },
 ];

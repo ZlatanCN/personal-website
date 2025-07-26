@@ -13,6 +13,7 @@ interface PaginationProps {
   totalPages: number;
   currentPage: number;
 }
+
 interface ListLayoutProps {
   posts: CoreContent<Blog>[];
   title: string;
@@ -173,7 +174,9 @@ export default function ListLayout({
                         </Link>
                       </h3>
                       <div className={'flex flex-wrap'}>
-                        {tags?.map((tag) => <Tag key={tag} text={tag} />)}
+                        {tags?.map((tag) => (
+                          <Tag key={tag} text={tag} />
+                        ))}
                       </div>
                     </div>
                     <div

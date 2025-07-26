@@ -1,8 +1,6 @@
 import { memo } from 'react';
 
-type BlankProps = {};
-
-const Blank = memo(({}: BlankProps) => {
+const Blank = memo(() => {
   return <svg className={'h-6 w-6'} />;
 });
 

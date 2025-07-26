@@ -1,8 +1,6 @@
 import { memo } from 'react';
 
-type SunProps = {};
-
-const Sun = memo(({}: SunProps) => {
+const Sun = memo(() => {
   return (
     <svg
       xmlns={'http://www.w3.org/2000/svg'}
