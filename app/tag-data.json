@@ -1,4 +1,6 @@
 {
-  "前端开发": 3,
+  "frontend": 4,
+  "browser": 1,
+  "performance": 1,
   "javascript": 3
 }
