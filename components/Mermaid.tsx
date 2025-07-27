@@ -1,6 +1,6 @@
 'use client';
 
-import { memo, useEffect, useId, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { Clipboard } from '@/components/icons';
 
@@ -8,10 +8,11 @@ type MermaidProps = {
   chart: string;
 };
 
-const Mermaid = memo(({ chart }: MermaidProps) => {
+const Mermaid = ({ chart }: MermaidProps) => {
   const [copied, setCopied] = useState<boolean>(false);
   const [showButton, setShowButton] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
+  const initialized = useRef(false);
   const uniqueId = useId();
 
   const handleCopy = async () => {
@@ -23,15 +24,26 @@ const Mermaid = memo(({ chart }: MermaidProps) => {
     }
   };
 
-  useEffect(() => {
+  const renderMermaid = async () => {
     if (ref.current) {
-      mermaid.initialize({});
-      mermaid.render(uniqueId, chart).then(({ svg }) => {
-        if (ref.current) {
-          ref.current.innerHTML = svg;
-        }
-      });
+      try {
+        const { svg } = await mermaid.render(uniqueId, chart);
+        ref.current.innerHTML = svg;
+      } catch (error) {
+        console.error('Mermaid render error:', error);
+        ref.current.innerHTML = `<pre class="text-red-500">Mermaid 渲染失败：${String(error)}</pre>`;
+      }
     }
+  };
+
+  useEffect(() => {
+    if (!initialized.current) {
+      mermaid.initialize({ startOnLoad: false });
+      initialized.current = true;
+    }
+
+    const raf = requestAnimationFrame(renderMermaid);
+    return () => cancelAnimationFrame(raf);
   }, [chart, uniqueId]);
 
   return (
@@ -58,7 +70,7 @@ const Mermaid = memo(({ chart }: MermaidProps) => {
       )}
     </div>
   );
-});
+};
 
 Mermaid.displayName = 'Mermaid';
 

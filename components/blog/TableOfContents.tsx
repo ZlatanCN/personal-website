@@ -10,7 +10,7 @@ type TableOfContentsProps = {
 const TableOfContents = memo(({ toc, activeId }: TableOfContentsProps) => {
   return (
     <div
-      className={'hidden xl:sticky xl:top-31 xl:mt-10 xl:flex xl:justify-end'}
+      className={'hidden xl:sticky xl:top-32 xl:mt-10 xl:flex xl:justify-end'}
     >
       <div
         style={{ maxHeight: 'calc(100vh - 10rem)' }}
