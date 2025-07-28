@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { Clipboard } from '@/components/icons';
+import { ZoomIn } from '@/components/icons/ZoomIn';
 
 type MermaidProps = {
   chart: string;
@@ -10,7 +11,8 @@ type MermaidProps = {
 
 const Mermaid = ({ chart }: MermaidProps) => {
   const [copied, setCopied] = useState<boolean>(false);
-  const [showButton, setShowButton] = useState<boolean>(false);
+  const [zoomIn, setZoomIn] = useState<boolean>(false);
+  const [showButtons, setShowButtons] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const initialized = useRef(false);
   const uniqueId = useId();
@@ -29,6 +31,12 @@ const Mermaid = ({ chart }: MermaidProps) => {
       try {
         const { svg } = await mermaid.render(uniqueId, chart);
         ref.current.innerHTML = svg;
+
+        const svgElement = ref.current.querySelector('svg');
+        if (svgElement) {
+          svgElement.style.maxHeight = '90vh';
+          svgElement.style.width = svgElement.clientWidth * 1.5 + 'px';
+        }
       } catch (error) {
         console.error('Mermaid render error:', error);
         ref.current.innerHTML = `<pre class="text-red-500">Mermaid 渲染失败：${String(error)}</pre>`;
@@ -49,24 +57,56 @@ const Mermaid = ({ chart }: MermaidProps) => {
   return (
     <div
       className={'relative my-7'}
-      onMouseEnter={() => setShowButton(true)}
+      onMouseEnter={() => setShowButtons(true)}
       onMouseLeave={() => {
-        setShowButton(false);
+        setShowButtons(false);
         setCopied(false);
       }}
     >
       <div ref={ref} className={'flex items-center'} />
-      {showButton && (
-        <button
-          className={`absolute top-2 right-2 size-8 cursor-pointer rounded border-2 bg-transparent p-1 ${
-            copied
-              ? 'border-green-400 focus:border-green-400 focus:outline-none'
-              : 'border-gray-700 dark:border-gray-300'
-          }`}
-          onClick={handleCopy}
+      {showButtons && (
+        <div className={'absolute top-2 right-2 flex gap-1'}>
+          <button
+            className={`size-8 cursor-pointer rounded border-2 bg-transparent p-1 ${
+              copied
+                ? 'border-green-400 focus:border-green-400 focus:outline-none'
+                : 'border-gray-700 dark:border-gray-300'
+            }`}
+            onClick={handleCopy}
+          >
+            <Clipboard copied={copied} />
+          </button>
+          <button
+            className={
+              'size-8 cursor-pointer rounded border-2 border-gray-700 bg-transparent p-1 dark:border-gray-300'
+            }
+            onClick={() => {
+              setZoomIn(true);
+            }}
+          >
+            <ZoomIn />
+          </button>
+        </div>
+      )}
+      {zoomIn && (
+        <div
+          className={
+            'fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-gray-950/50'
+          }
+          onClick={() => {
+            setZoomIn(false);
+          }}
         >
-          <Clipboard copied={copied} />
-        </button>
+          <div
+            className={
+              'flex items-center justify-center rounded-lg bg-white p-4 shadow-lg dark:bg-gray-900'
+            }
+            onClick={(e) => e.stopPropagation()}
+            dangerouslySetInnerHTML={{
+              __html: ref.current?.innerHTML ?? '',
+            }}
+          />
+        </div>
       )}
     </div>
   );

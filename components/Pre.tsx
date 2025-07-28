@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useRef, ReactNode, memo } from 'react';
+import { useState, useRef, ReactNode } from 'react';
 import { Clipboard } from '@/components/icons';
 
 type PreProps = {
   children: ReactNode;
 };
 
-const Pre = memo(({ children }: PreProps) => {
+const Pre = ({ children }: PreProps) => {
   const textInput = useRef<HTMLDivElement | null>(null);
   const [hovered, setHovered] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
@@ -57,7 +57,7 @@ const Pre = memo(({ children }: PreProps) => {
       <pre>{children}</pre>
     </div>
   );
-});
+};
 
 Pre.displayName = 'Pre';
 
