@@ -88,26 +88,24 @@ const Mermaid = ({ chart }: MermaidProps) => {
           </button>
         </div>
       )}
-      {zoomIn && (
+      <div
+        className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 dark:bg-gray-950/50 ${
+          zoomIn
+            ? 'pointer-events-auto opacity-100'
+            : 'pointer-events-none opacity-0'
+        }`}
+        onClick={() => setZoomIn(false)}
+      >
         <div
-          className={
-            'fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-gray-950/50'
-          }
-          onClick={() => {
-            setZoomIn(false);
+          className={`transform rounded-lg bg-white p-4 shadow-lg transition-all duration-300 dark:bg-gray-900 ${
+            zoomIn ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+          }`}
+          onClick={(e) => e.stopPropagation()}
+          dangerouslySetInnerHTML={{
+            __html: ref.current?.innerHTML ?? '',
           }}
-        >
-          <div
-            className={
-              'flex items-center justify-center rounded-lg bg-white p-4 shadow-lg dark:bg-gray-900'
-            }
-            onClick={(e) => e.stopPropagation()}
-            dangerouslySetInnerHTML={{
-              __html: ref.current?.innerHTML ?? '',
-            }}
-          />
-        </div>
-      )}
+        />
+      </div>
     </div>
   );
 };
