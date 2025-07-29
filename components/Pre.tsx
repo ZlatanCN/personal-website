@@ -41,19 +41,18 @@ const Pre = ({ children }: PreProps) => {
       onMouseLeave={onExit}
       className={'relative'}
     >
-      {hovered && (
-        <button
-          className={`absolute top-2 right-2 size-8 cursor-pointer rounded border-2 bg-transparent p-1 ${
-            copied
-              ? 'border-green-400 focus:border-green-400 focus:outline-none'
-              : 'border-gray-700 dark:border-gray-300'
-          }`}
-          onClick={onCopy}
-        >
-          <Clipboard copied={copied} />
-        </button>
-      )}
-
+      <button
+        className={`absolute top-2 right-2 size-8 cursor-pointer rounded border-2 bg-transparent p-1 transition-opacity duration-200 ${
+          hovered ? 'opacity-100' : 'opacity-0'
+        } ${
+          copied
+            ? 'border-green-400 focus:border-green-400 focus:outline-none'
+            : 'border-gray-700 dark:border-gray-300'
+        }`}
+        onClick={onCopy}
+      >
+        <Clipboard copied={copied} />
+      </button>
       <pre>{children}</pre>
     </div>
   );

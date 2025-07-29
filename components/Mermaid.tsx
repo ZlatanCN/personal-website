@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { Clipboard } from '@/components/icons';
 import { ZoomIn } from '@/components/icons/ZoomIn';
@@ -26,7 +26,7 @@ const Mermaid = ({ chart }: MermaidProps) => {
     }
   };
 
-  const renderMermaid = async () => {
+  const renderMermaid = useCallback(async () => {
     if (ref.current) {
       try {
         const { svg } = await mermaid.render(uniqueId, chart);
@@ -42,7 +42,7 @@ const Mermaid = ({ chart }: MermaidProps) => {
         ref.current.innerHTML = `<pre class="text-red-500">Mermaid 渲染失败：${String(error)}</pre>`;
       }
     }
-  };
+  }, [chart, uniqueId]);
 
   useEffect(() => {
     if (!initialized.current) {
@@ -52,7 +52,7 @@ const Mermaid = ({ chart }: MermaidProps) => {
 
     const raf = requestAnimationFrame(renderMermaid);
     return () => cancelAnimationFrame(raf);
-  }, [chart, uniqueId]);
+  }, [chart, renderMermaid, uniqueId]);
 
   return (
     <div
@@ -63,31 +63,38 @@ const Mermaid = ({ chart }: MermaidProps) => {
         setCopied(false);
       }}
     >
+      {/* Mermaid 图 */}
       <div ref={ref} className={'flex items-center'} />
-      {showButtons && (
-        <div className={'absolute top-2 right-2 flex gap-1'}>
-          <button
-            className={`size-8 cursor-pointer rounded border-2 bg-transparent p-1 ${
-              copied
-                ? 'border-green-400 focus:border-green-400 focus:outline-none'
-                : 'border-gray-700 dark:border-gray-300'
-            }`}
-            onClick={handleCopy}
-          >
-            <Clipboard copied={copied} />
-          </button>
-          <button
-            className={
-              'size-8 cursor-pointer rounded border-2 border-gray-700 bg-transparent p-1 dark:border-gray-300'
-            }
-            onClick={() => {
-              setZoomIn(true);
-            }}
-          >
-            <ZoomIn />
-          </button>
-        </div>
-      )}
+
+      {/* 复制和放大按钮 */}
+      <div
+        className={`absolute top-2 right-2 flex gap-1 transition-opacity duration-200 ${
+          showButtons ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
+        <button
+          className={`size-8 cursor-pointer rounded border-2 bg-transparent p-1 ${
+            copied
+              ? 'border-green-400 focus:border-green-400 focus:outline-none'
+              : 'border-gray-700 dark:border-gray-300'
+          }`}
+          onClick={handleCopy}
+        >
+          <Clipboard copied={copied} />
+        </button>
+        <button
+          className={
+            'size-8 cursor-pointer rounded border-2 border-gray-700 bg-transparent p-1 dark:border-gray-300'
+          }
+          onClick={() => {
+            setZoomIn(true);
+          }}
+        >
+          <ZoomIn />
+        </button>
+      </div>
+
+      {/* 放大后的 Mermaid 图 */}
       <div
         className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 dark:bg-gray-950/50 ${
           zoomIn

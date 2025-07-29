@@ -7,7 +7,7 @@ const Moon = memo(() => {
       viewBox={'0 0 20 20'}
       fill={'currentColor'}
       className={
-        'h-6 w-6 opacity-100 transition-opacity duration-300 ease-in-out'
+        'h-6 w-6 cursor-pointer opacity-100 transition-opacity duration-300 ease-in-out'
       }
     >
       <path

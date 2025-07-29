@@ -11,7 +11,7 @@ const Monitor = memo(() => {
       strokeLinecap={'round'}
       strokeLinejoin={'round'}
       className={
-        'h-6 w-6 opacity-100 transition-opacity duration-300 ease-in-out'
+        'h-6 w-6 cursor-pointer opacity-100 transition-opacity duration-300 ease-in-out'
       }
     >
       <rect x={'3'} y={'3'} width={'14'} height={'10'} rx={'2'} ry={'2'}></rect>

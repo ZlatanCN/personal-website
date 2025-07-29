@@ -26,7 +26,9 @@ const TableOfContents = memo(({ toc, activeId }: TableOfContentsProps) => {
                 style={{
                   paddingLeft: `${item.depth > 1 ? item.depth * 0.5 : 0}rem`,
                 }}
-                className={`hover:text-primary-500 block text-xs transition-colors ${activeId == item.url.slice(1) ? 'text-primary-500 font-semibold' : ''}`}
+                className={`hover:text-primary-500 block text-xs transition-colors duration-200 ${
+                  activeId == item.url.slice(1) ? 'text-primary-500' : ''
+                }`}
               >
                 {item.value}
               </Link>
