@@ -1,10 +1,10 @@
-import { memo } from 'react';
+import { memo, ReactNode } from 'react';
 import Link from '@/components/Link';
 import siteMetadata from '@/data/siteMetadata';
 import Comments from '@/components/Comments';
 
 type PostBodyProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   filePath: string;
   path: string;
   slug: string;

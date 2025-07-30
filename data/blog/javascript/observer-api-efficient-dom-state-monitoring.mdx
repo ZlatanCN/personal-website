@@ -1,0 +1,132 @@
+---
+title: Observer API：高效的 DOM 状态监控
+tags: [Frontend, JavaScript]
+summary: 本文深度剖析了现代浏览器提供的三大 Observer API：IntersectionObserver, MutationObserver, 和 ResizeObserver。内容系统性地阐述了每种 Observer 的构造、配置与回调机制。
+date: 2025-07-29
+lastmod: 2025-07-29
+draft: false
+---
+现代 Web 应用要求对 DOM 的状态变化做出快速而高效的响应。传统的事件监听或轮询（polling）机制在处理如元素可见性、尺寸变化或 DOM 结构变更等场景时，往往会引发性能瓶颈。为解决此问题，浏览器提供了一套现代的 **Observer API**：`IntersectionObserver`、`MutationObserver` 和 `ResizeObserver`，它们以异步、低开销的方式提供了观察 DOM 状态变化的能力。
+
+# `IntersectionObserver`: 交叉区域监控
+
+`IntersectionObserver` 提供了一种异步观察目标元素与其祖先元素或顶级文档视口（viewport）交叉状态变化的方法。它极大地简化了懒加载（lazy loading）、无限滚动等功能的实现，并避免了在 `scroll` 事件中进行高频次、高开销的几何计算。
+
+- **构造与配置**：`IntersectionObserver` 的实例通过 `new IntersectionObserver(callback, options)` 创建。
+	- `callback`: 当目标元素的交叉状态满足 `threshold` 条件时被异步调用的函数。
+	- `options`: 一个配置对象，包含以下关键属性：
+		- `root`: 用于检查交叉的根元素（root element）。必须是目标元素的祖先。如果未指定或为 `null`，则默认为浏览器视口。
+		- `rootMargin`: 一个字符串，其语法类似 CSS `margin`，用于在计算交叉时扩大或缩小 `root` 的边界框。
+		- `threshold`: 一个数字或数字数组，介于 0.0 和 1.0 之间，定义了触发 `callback` 的交叉比例阈值。
+- **回调函数**：`callback` 接收两个参数：`entries` 和 `observer`。
+	- `entries`: 一个 `IntersectionObserverEntry` 对象的数组，包含了所有可见性发生变化的目标元素的信息。`IntersectionObserverEntry` 对象的核心属性是 `isIntersecting` (布尔值)，表示目标当前是否与根交叉。
+	- `observer`: 对 `IntersectionObserver` 实例自身的引用。
+
+```JS
+const options = {
+  root: document.querySelector('#scrollArea'),
+  rootMargin: '0px',
+  threshold: 0.5 // 目标元素 50% 可见时触发
+};
+
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // 目标元素现在至少有 50% 在 root 内部可见
+      console.log(`Element ${entry.target.id} is visible.`);
+      // 可以取消观察，避免重复触发
+      observer.unobserve(entry.target);
+    }
+  });
+}, options);
+
+// 开始观察一个或多个目标元素
+const target = document.getElementById('observedElement');
+observer.observe(target);
+```
+
+> [!tip] 性能优势
+> `IntersectionObserver` 的回调是异步触发的，并且经过浏览器的高度优化。这意味着它不会在主线程上引起滚动卡顿，远优于在 `scroll` 事件监听器中反复调用 `getBoundingClientRect()` 的传统模式。
+
+# `MutationObserver`: DOM 结构变更监控
+
+`MutationObserver` 提供了一种监视对 DOM 树所做更改的能力。它取代了已废弃的 Mutation Events，以一种性能更高、更可靠的方式响应节点的增删、属性的修改或文本内容的变化。
+
+- **构造与配置**：`MutationObserver` 的实例通过 `new MutationObserver(callback)` 创建，其 `callback` 接收 `mutationsList` 和 `observer` 两个参数。
+- **启动观察**：通过调用实例的 `.observe(targetNode, options)` 方法来启动对特定节点的观察。
+	- `targetNode`: 需要被观察的 DOM 节点。
+	- `options`: 一个配置对象，用于精确定义需要观察哪些类型的变更。
+
+> [!example] `observerOptions` 详解
+> `options` 对象可以包含以下一个或多个布尔值属性（除 `attributeFilter` 外）：
+> - **`childList: true`**: 观察目标节点（`targetNode`）的直接子节点的添加或删除。
+> - **`attributes: true`**: 观察目标节点属性的变化。
+> - **`characterData: true`**: 观察目标节点中所包含的字符数据（`CharacterData`，即文本节点）的变化。
+> - **`subtree: true`**: 将上述指定的观察（`childList`, `attributes`, `characterData`）扩展到目标节点下的整个子树中的所有节点。
+> - **`attributeOldValue: true`**: 如果 `attributes` 设为 `true`，则在 `MutationRecord` 中记录下变化前的属性值。
+> - **`characterDataOldValue: true`**: 如果 `characterData` 设为 `true`，则在 `MutationRecord` 中记录下变化前的字符数据。
+> - **`attributeFilter: ['attr1', 'attr2']`**: 一个由属性名（字符串）组成的数组，用于指定只观察某些特定属性的变化。如果定义了此项，则无需设置 `attributes: true`。
+
+```JS
+const targetNode = document.getElementById('some-id');
+
+const config = { attributes: true, childList: true, subtree: true };
+
+const callback = (mutationsList, observer) => {
+  for (const mutation of mutationsList) {
+    if (mutation.type === 'childList') {
+      console.log('A child node has been added or removed.');
+    } else if (mutation.type === 'attributes') {
+      console.log(`The ${mutation.attributeName} attribute was modified.`);
+    }
+  }
+};
+
+const observer = new MutationObserver(callback);
+observer.observe(targetNode, config);
+
+// ... 稍后可以停止观察
+// observer.disconnect();
+```
+
+> [!note] 异步与批量处理
+> `MutationObserver` 的回调同样是异步的。浏览器会将一个事件循环周期内发生的所有 DOM 变更记录下来，然后在微任务（microtask）阶段，将这些变更作为一个 `mutationsList` 数组，**一次性地**传递给回调函数。这种批量处理机制避免了因连续、微小的 DOM 变更而频繁触发回调，保证了性能。
+
+# `ResizeObserver`: 元素尺寸变更监控
+
+`ResizeObserver` 提供了一种高效、可靠的方式来监视元素尺寸的变化。它解决了传统 `window:resize` 事件只能监听视口变化，而无法精确响应单个元素尺寸变化的痛点，对于构建响应式组件至关重要。
+
+- **构造与配置**: `ResizeObserver` 的实例通过 `new ResizeObserver(callback)` 创建。其 `callback` 接收 `entries` 和 `observer` 两个参数。
+- **启动观察**: 通过调用实例的 `.observe(targetElement, options)` 方法启动观察。
+    - `targetElement`: 需要被观察的 DOM 元素。
+    - `options`: 一个可选的配置对象，目前只包含一个 `box` 属性，用于指定观察哪个盒模型尺寸（`'content-box'`, `'border-box'`, `'device-pixel-content-box'`）。
+- **回调函数**: `callback` 的 `entries` 参数是一个 `ResizeObserverEntry` 对象的数组。每个 `entry` 提供了被观察元素的多个尺寸信息，最常用的是 `borderBoxSize` 和 `contentRect`。
+    - `entry.borderBoxSize[0].inlineSize`: 元素的 `border-box` 宽度。
+    - `entry.borderBoxSize[0].blockSize`: 元素的 `border-box` 高度。
+
+```javascript
+const observedEl = document.getElementById('resizable-element');
+
+const resizeObserver = new ResizeObserver(entries => {
+  for (let entry of entries) {
+    const { inlineSize, blockSize } = entry.borderBoxSize[0];
+    console.log(`Element size changed: width=${inlineSize}, height=${blockSize}`);
+  }
+});
+
+resizeObserver.observe(observedEl);
+```
+
+> [!note] 为什么 `borderBoxSize` 是一个数组？
+> 这是为了**兼容未来可能出现的复杂布局**，在这些布局中，一个元素可能由多个**“片段 (fragments)”**组成。
+> 
+> 最典型的例子是**多栏布局 (multi-column layout)**，一个段落（`<p>`）的文本可能会被打断并分布在多个栏中，每一个栏中的部分就是一个独立的片段，拥有自己的尺寸。
+> 
+> ```html
+> <div style="column-count: 2; width: 400px">
+>   <p>这是一段很长的文本，它会被自动分栏显示。</p>
+> </div>
+> ```
+> 
+> 在当前绝大多数情况下，一个元素只有一个片段，因此这个数组的长度通常为 1，我们只需访问 `borderBoxSize[0]` 即可。
+
