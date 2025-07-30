@@ -112,9 +112,9 @@ function onScroll(event) {
 > [!tip] 关于 `translateY` 的作用
 > 如果不设置 `translateY` 偏移，当用户向下滚动时，虽然渲染的列表项数据会更新（`slice` 切换），但内容列表的物理位置仍在容器的顶部。这会导致新渲染的项一闪而过，视觉上像是数据在向上“滚走”。
 > 
-> ![[../../!attachments/PixPin_2025-07-30_17-27-34.gif]]
+> ![Without translateY](/static/images/virtual-scrolling-implementation-principle/without-translateY.gif)
 > 
 > 设置 `transform: translateY(scrollTop)` 的作用是，在滚动的同时，将内容列表容器**向下推**，其向下的距离**恰好等于**容器向上滚动的距离。这一“推”一“滚”相互抵消，使得用户看到的列表项在视觉上保持在了正确的位置。
 > 
-> ![[../../!attachments/PixPin_2025-07-30_17-29-48.gif]]
+> ![With translateY](/static/images/virtual-scrolling-implementation-principle/with-translateY.gif)
 
