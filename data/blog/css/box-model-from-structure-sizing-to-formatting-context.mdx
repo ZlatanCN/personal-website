@@ -1,0 +1,82 @@
+---
+title: 盒模型：从结构、尺寸计算到格式化上下文
+tags: [Frontend, CSS]
+summary: 本文深度剖析了 CSS 盒模型 (Box Model) 的核心机制，内容系统性地阐述了盒模型的四层结构（content, padding, border, margin）、两种尺寸计算模式（content-box vs border-box），以及块级 (block)、行内级 (inline) 和匿名 (anonymous) 盒的布局特性与数学行为。
+date: 2025-07-28
+lastmod: 2025-07-28
+draft: false
+---
+在 Web 中，所有 HTML 元素都可以被视为一个矩形的**盒 (box)**。CSS 盒模型是描述这些盒如何占据空间、如何计算尺寸以及如何相互作用的基础模型。
+
+# 盒模型的解剖学 (Anatomy of the Box Model)
+
+每个盒都由四个同心矩形区域组成，从内到外依次为：
+
+- **内容区 (Content Box)**: 包含元素的实际内容，如文本、图片或其他盒。其尺寸由 `width` 和 `height` 属性决定。
+- **内边距区 (Padding Box)**: 包裹内容区，是内容与边框之间的空白区域。其大小由 `padding` 相关属性控制。
+- **边框区 (Border Box)**: 包裹内边距区，是盒的可见边框。其大小和样式由 `border` 相关属性控制。
+- **外边距区 (Margin Box)**: 包裹边框区，是盒边框之外的透明区域。它负责将当前盒与相邻盒隔开。其大小由 `margin` 相关属性控制。
+
+这四个层次共同构成了元素的完整空间占用。
+
+![盒模型结构](/static/images/box-model-from-structure-sizing-to-formatting-context/box-model.png)
+
+# 盒尺寸 (Box Sizing)
+
+## 尺寸的决定方式
+
+一个盒的最终尺寸，取决于其内在内容和外部 CSS 规则的共同作用。
+
+> [!note] Intrinsic vs. Restricted Sizing
+> - **内在尺寸 (Intrinsic Size)**: 指盒的尺寸仅由其内容（如文本长度、图片原始尺寸）决定的状态。这是元素在不受外部 CSS 尺寸约束时的自然大小。
+> - **限制尺寸 (Restricted Size)**: 指盒的尺寸受到外部 CSS 规则影响的状态。这些规则包括显式设置的 `width` 和 `height`，或由父级布局上下文（如 Flexbox 或 Grid）施加的约束。
+
+## 尺寸的数学模型 (`box-sizing`)
+
+`box-sizing` 属性决定了元素的 `width` 和 `height` 属性在数学上应用的区域，这是盒模型计算中最核心的概念。
+
+- **`content-box` (默认值)**：在此模型下，用户设置的 `width` 和 `height` **仅应用于内容区 (Content Box)**。元素的总宽度需要额外加上内边距和边框的宽度。
+	- `Total Width = width + padding-left + padding-right + border-left + border-right` 
+	- 这种计算方式不直观，容易导致布局问题（例如，一个宽度为 `50%` 的元素，再添加 `padding` 就会超出父容器的一半）。
+- **`border-box` (现代推荐)**：在此模型下，用户设置的 `width` 和 `height` **包含了内容区、内边距和边框**。内边距和边框的宽度会向内“挤占”内容区的空间。
+	- `Total Width = width` 
+	- 这种方式更符合人类直觉，使得布局计算变得极为简单和可预测。
+
+> [!tip] 全局 `border-box` 设置
+> 在现代 CSS 开发中，将所有元素都设置为 `border-box` 是一种最佳实践。
+> ```css
+> *,
+> *::before,
+> *::after {
+>   box-sizing: border-box;
+> }
+> ```
+
+# 盒类型与格式化上下文 (Box Types & Formatting Contexts)
+
+元素的 `display` 属性决定了其生成的盒类型，这又进一步决定了它在页面布局中的行为模式，即它所参与的**格式化上下文 (Formatting Context)**。
+
+## 块级盒 (Block-level Boxes)
+
+- **行为**: 参与**块格式化上下文 (Block Formatting Context, BFC)**。
+- **特征**:
+    - 在文档流中，每个块级盒在垂直方向上一个接一个地排列（从上到下）。
+    - 默认情况下，其宽度会**自动扩展至充满其包含块的 100%**。
+    - 其高度默认由其内在尺寸（内容高度）决定。
+    - `width`, `height`, `margin`, `padding` 属性均有效。
+
+## 行内级盒 (Inline-level Boxes)
+
+- **行为**: 参与**行内格式化上下文 (Inline Formatting Context, IFC)**。
+- **特征**:
+    - 在文档流中，行内级盒在水平方向上一个接一个地排列，当到达行尾时会换行。其行为类似于文本流。
+    - **数学行为的特殊性**:
+        - `width` 和 `height` 属性**完全被忽略**。
+        - `margin` 属性在**垂直方向上无效**（`margin-top`, `margin-bottom` 不会影响行高或推开其他行），仅在水平方向上有效。
+        - `padding` 属性在垂直方向上**视觉上有效**（会应用背景色），但**不会增加行盒 (line-box) 的高度**，因此不会将上下行的文本推开。
+
+## 匿名盒 (Anonymous Boxes)
+
+- **行为**: 当一些文本内容没有被任何行内元素包裹，且其兄弟节点是**块级元素**时，为了满足所有内容都必须存在于某个盒中的规则，浏览器会自动创建**匿名块盒 (anonymous block box)** 来包裹这些文本。类似地，如果裸文本与**行内元素**混合，会创建**匿名行内盒 (anonymous inline box)**。
+- **特征**: 这些盒是不可见的，不能被 CSS 选择器选中，它们的存在是为了确保渲染引擎内部的逻辑一致性。
+

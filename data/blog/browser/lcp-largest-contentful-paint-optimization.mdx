@@ -1,0 +1,92 @@
+---
+title: LCP (最大内容绘制) 优化
+tags: [Frontend, Browser, Performance]
+summary: 本文深度剖析了核心 Web 指标 LCP (Largest Contentful Paint) 的优化策略。内容系统性地阐述了优化 LCP 的四大支柱：通过 preload 和 fetchpriority 优先加载 LCP 资源，优化资源本身（格式与响应式），利用懒加载减少网络竞争，以及通过缓存策略提升重复访问速度。
+date: 2025-07-11
+lastmod: 2025-07-13
+draft: false
+---
+LCP (Largest Contentful Paint) 是 Google Core Web Vitals 中衡量用户感知加载速度的核心指标。它记录了从用户请求页面开始，到视口（viewport）内最大的可见内容元素（通常是图片或文本块）被渲染完成所需的时间。一个快速的 LCP（理想情况下 ≤ 2.5秒）能给用户带来“网站加载迅速”的直观感受，对提升用户体验和 SEO 排名至关重要。
+
+# 策略一：优先加载 LCP 资源 (Prioritize the LCP Resource)
+
+此策略的核心是向浏览器明确指出“哪个资源最重要”，使其能够以最高优先级尽早开始下载。
+
+- **使用 `<link rel="preload">` (推荐)**: 这是最可靠、兼容性最好的方式。在 HTML 的 `<head>` 中声明，可以让浏览器在解析 HTML 的早期就发现并开始以高优先级下载 LCP 资源，而无需等待解析到 `<img>` 或 CSS 中的 `background-image`。
+
+```html
+<link rel="preload" as="image" href="/hero.webp" fetchpriority="high">
+```
+
+- **使用 `fetchpriority="high"`**: 这是一个较新的属性 (Firafox 暂时不兼容)，可以直接在 `<img>` 或 `fetch` 请求上使用，以提升其在浏览器调度队列中的优先级。
+
+```html
+<img src="/hero.webp" alt="Hero" fetchpriority="high" />
+```
+
+> [!tip] 互为补充
+> `fetchpriority` 可以与 `preload` 互为补充：`preload` 负责**早发现**，`fetchpriority` 负责**高优先级**。在支持的浏览器中，两者结合使用效果最佳。
+> ```html
+> <link
+>     rel="preload"
+>     as="image"
+>     href="/images/hero.webp"
+>     fetchpriority="high"
+>     type="image/webp"
+>>
+> ```
+
+# 策略二：优化 LCP 元素本身 (Optimize the LCP Element)
+
+确保资源本身文件体积小、格式优，是优化的物理基础。如果 LCP 元素是一张图片，以下优化至关重要：
+
+- **采用现代图像格式**: 优先使用 **AVIF** 和 **WebP** 格式。它们能在提供与传统 JPG/PNG 几乎无差别的视觉质量的同时，将文件体积减小 30%-50% 甚至更多。
+- **实施响应式图像**: 使用 `<picture>` 和 `<source>` 标签，配合 `media` 和 `srcset` 属性，为不同屏幕尺寸、分辨率的设备提供最优尺寸的图片。这可以避免移动设备加载不必要的超大桌面端图片。
+
+```html
+<picture>
+  <source srcset="hero-image-mobile.webp" media="(max-width: 600px)">
+  <source srcset="hero-image-desktop.webp" media="(min-width: 601px)">
+  <img src="hero-image-desktop.webp" fetchpriority="high" alt="关键视觉内容">
+</picture>
+```
+
+# 策略三：减少非关键资源的网络竞争 (Reduce Network Contention)
+
+优化 LCP 的一个巧妙思路是，为 LCP 元素“扫清障碍”，确保浏览器的网络带宽优先为其服务。
+
+- **机制**: 为所有**非首屏**的、非关键的图片和 `iframe` 添加 `loading="lazy"` 属性。这会指示浏览器推迟加载这些资源，直到用户即将滚动到它们附近时才开始下载。
+- **作用**: 通过减少初始页面加载时的并发网络请求数量，为 LCP 图片等关键资源的下载腾出宝贵的网络带宽，从而间接加速 LCP。
+
+# 策略四：善用缓存机制 (Leverage Caching)
+
+对于重复访问的用户，强大的缓存策略是实现“秒开”LCP 体验的关键。
+
+- **强缓存 (Strong Caching)**: 通过 `Cache-Control: max-age=<seconds>` 响应头，指示浏览器在指定时间内直接从本地缓存读取资源，完全避免网络请求。
+- **协商缓存 (Conditional Caching)**: 通过 `ETag` 和 `Last-Modified` 响应头。当强缓存过期后，浏览器会发送一个验证请求。如果服务器确认资源未变更，则返回一个极小的 `304 Not Modified` 响应，浏览器继续使用本地缓存。
+
+> [!tip] 混合使用策略
+> 在 `Cache-Control` 中可以同时利用这两者。
+> ```http
+> Cache-Control: public, max-age=3600, must-revalidate
+> ```
+> 这个头指令告诉浏览器：在 1 小时 (`max-age=3600`) 内使用强缓存；1 小时后，缓存过期，必须（`must-revalidate`）携带 `ETag` 或 `Last-Modified` 发起协商缓存请求来验证资源是否仍然有效。
+> ```mermaid
+> flowchart TD
+>     A[浏览器发起资源请求] --> B{是否命中强缓存？}
+>     B -- 是 --> C[直接使用本地缓存<br/>❌ 不发请求]
+>     B -- 否 --> D{"是否存在协商缓存标识<br/>(如 ETag / Last-Modified)?"}
+>     
+>     D -- 是 --> E[浏览器带条件头发请求<br/>If-None-Match / If-Modified-Since]
+>     E --> F{服务器资源是否有变？}
+>     F -- 否 --> G[返回 304 Not Modified<br/>✅ 使用本地缓存]
+>     F -- 是 --> H[返回 200 OK + 新资源<br/>✅ 更新本地缓存]
+> 
+>     D -- 否 --> I[直接重新请求资源<br/>返回 200 OK + 内容]
+> 
+>     style C fill:#A4F9C8,stroke:#333,stroke-width:1px
+>     style G fill:#FFE066,stroke:#333,stroke-width:1px
+>     style H fill:#FFB3B3,stroke:#333,stroke-width:1px
+>     style I fill:#FFB3B3,stroke:#333,stroke-width:1px
+> ```
+

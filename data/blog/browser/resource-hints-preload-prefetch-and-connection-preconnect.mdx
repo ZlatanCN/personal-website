@@ -1,0 +1,65 @@
+---
+title: Resource Hints (preload, prefetch 及连接预热)
+tags: [Frontend, Browser, Performance]
+summary: 本文深度剖析了四种关键的浏览器资源提示（Resource Hints）——dns-prefetch, preconnect, preload, 和 prefetch——的机制与差异。
+date: 2025-07-14
+lastmod: 2025-07-14
+draft: false
+---
+现代浏览器提供了一套强大的**资源提示 (Resource Hints)** 机制，它允许开发者通过在 HTML `<head>` 中使用特定的 `<link>` 标签，向浏览器提供关于未来可能需要的资源或网络连接的“线索”。这使得浏览器能够**前瞻性地**执行从低成本的 DNS 查询到高成本的资源预下载等一系列优化操作，从而显著缩短关键资源的加载时间，提升用户感知的页面性能。
+
+# 连接预热 (Connection Priming)：降低网络握手延迟
+
+这类提示旨在预先完成建立网络连接所需的部分或全部“握手”过程，为后续的资源请求铺平道路。
+
+## `dns-prefetch`: 轻量级的 DNS 预解析
+
+- **作用**: 指示浏览器**仅提前对一个域名进行 DNS 解析**。这是一个开销极低的操作，浏览器会在空闲时将域名解析为 IP 地址并放入本地缓存。当未来真正需要从该域名请求资源时，DNS 查询这一步（可能耗时 20-120ms）就已经被消除。
+- **适用场景**: 当页面引用了多个不同第三方域名的资源时，使用此方法批量预解析这些域名非常有效。
+
+```html
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+```
+
+## `preconnect`: 预建立完整连接
+
+- **作用**: `preconnect` 比 `dns-prefetch` 更进一步。它会指示浏览器完成**完整的连接建立过程**，包括 **DNS 解析**、**TCP 握手**和 **TLS 握手**。
+- **机制**: 这个操作的开销相对更高，因为它会实际地在用户设备和服务器之间建立一个连接套接字。当真正的请求发出时，可以直接复用这个已经“预热”好的连接，从而消除所有握手延迟。
+- **适用场景**: 用于那些**确定性高、对性能至关重要**的域名，例如托管 LCP 图片的 CDN、提供核心数据的 API 服务器等。建议仅对少数（1-2个）最关键的域名使用，避免创建不必要的连接。
+
+```html
+<link rel="preconnect" href="https://cdn.example.com" crossorigin>
+```
+
+# 资源预取 (Resource Fetching)：优化内容加载时机
+
+这类提示会指示浏览器下载完整的资源，但它们的目标、时机和优先级截然不同。
+
+## `prefetch`: 预拉取未来页面的非关键资源
+
+- **作用**: `prefetch` 是一个**低优先级**的提示，告诉浏览器某个资源在用户**未来的导航**中（例如，用户很可能会点击进入的下一个页面）可能会用到。
+- **机制**: 浏览器会在**当前页面加载完成后，在自身空闲时**，以**最低的优先级**在后台下载这个资源并存入 HTTP 缓存。它完全不会与当前页面的关键资源抢占带宽。
+
+```html
+<link rel="prefetch" href="product-details.js" as="script">
+```
+
+## `preload`: 预加载当前页面的关键资源
+
+- **作用**: `preload` 以**高优先级**下载一个资源，因为它对于**当前页面的首次渲染至关重要**，但可能被浏览器的预加载扫描器发现得较晚（例如，深埋在 CSS 文件中的字体，或由 JavaScript 动态加载的 LCP 图片）。
+- **机制**: `preload` 仅下载资源到内存中待命，**不会自动执行或应用**。脚本需要通过 `<script>` 标签执行，CSS 需要通过 `<link rel="stylesheet">` 应用。它必须包含 `as` 属性来告知浏览器资源的类型，以便进行正确的优先级排序和安全检查。
+
+```html
+<link rel="preload" as="image" href="/images/hero-image.webp">
+<link rel="preload" as="font" href="/fonts/myfont.woff2" type="font/woff2" crossorigin>
+```
+
+# 总结与对比
+
+|`rel` 属性|核心作用|优先级|目标页面|关键用途|
+|---|---|---|---|---|
+|`dns-prefetch`|仅 DNS 解析|低|当前或未来|减少多个第三方域名的 DNS 延迟|
+|`preconnect`|DNS + TCP + TLS|高|当前或未来|为即将到来的**关键连接**预热，消除握手延迟|
+|`preload`|**下载完整资源**|**高**|**当前页面**|提升 LCP、FCP，加载**迟发现的关键资源**|
+|`prefetch`|**下载完整资源**|**最低**|**未来页面**|提升**后续页面**的加载速度，改善多页面应用体验|

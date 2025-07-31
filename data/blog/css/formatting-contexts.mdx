@@ -1,0 +1,93 @@
+---
+title: 格式化上下文 (Formatting Contexts)
+tags: [Frontend, CSS]
+summary: 本文深度剖析了 CSS 布局的底层机制——格式化上下文 (Formatting Context)。内容系统性地阐述了其核心原则（隔离性、可扩展性、可预测性），并详细拆解了两种基础上下文：块格式化上下文 (BFC) 和行内格式化上下文 (IFC) 的建立条件与布局规则。
+date: 2025-07-28
+lastmod: 2025-07-28
+draft: false
+---
+CSS 布局的核心在于浏览器如何处理文档流中的盒 (box)。**格式化上下文 (Formatting Context)** 是 W3C 视觉格式化模型 (Visual Formatting Model) 中的一个关键概念，它定义了一个独立的渲染区域，在这个区域内，一组盒会遵循一套特定的规则进行布局。格式化上下文是所有 CSS 布局（从传统的浮动到现代的 Flexbox 和 Grid）的理论基础。
+
+# 格式化上下文的核心原则
+
+格式化上下文是页面中的一个独立环境，其内部的布局计算不受外部环境的影响。这一概念建立在三个核心原则之上：
+
+1. **隔离性 (Isolation)**：格式化上下文是一个完全隔离的渲染环境。其内部盒的布局，仅受当前上下文定义的规则约束，完全不受外部上下文的影响，反之亦然。例如，一个块格式化上下文 (Block Formatting Context, BFC) 内部的浮动元素，其高度计算不会影响到外部元素的布局。
+2. **可扩展性 (Scalability)**：CSS 的布局模型是高度可扩展的。当需要引入一种全新的布局范式时，CSS 规范只需定义一种新的格式化上下文类型即可，而无需修改现有的盒模型或渲染逻辑。例如，`display: flex` 会创建一个**伸缩格式化上下文 (Flex Formatting Context)**，其内部的子元素会遵循 Flexbox 规则进行布局。
+3. **可预测性 (Predictability)**：每一种格式化上下文都拥有一套严格且明确的规则集。这意味着，只要确定了一个元素所处的格式化上下文，其布局行为就是完全可以预测的。这种确定性是构建复杂、稳定用户界面的基础。
+
+# 基础格式化上下文
+
+在现代 CSS 布局（如 Flexbox, Grid）出现之前，所有布局都基于两种基础的格式化上下文。
+
+## 块格式化上下文 (Block Formatting Context, BFC)
+
+BFC 是页面上一个独立的块级布局环境，其内部的块级盒 (block-level boxes) 会遵循特定的规则进行排列。文档的根元素 (`<html>`) 会创建一个初始的 BFC。
+
+**BFC 内部的布局规则**:
+
+1. 内部的盒在垂直方向上，一个接一个地放置。
+2. 盒垂直方向的距离由 `margin` 决定。在同一个 BFC 内，相邻块级盒的垂直外边距会发生**外边距折叠 (Margin Collapsing)**。
+3. 每个盒的左外边缘，与包含块的左边缘相接触。
+4. BFC 的区域不会与浮动盒重叠。
+5. 计算 BFC 的高度时，浮动元素也参与计算。
+
+> [!note] 外边距折叠 (Margin Collapsing)
+> 外边距折叠是指在同一个**块格式化上下文** 中，相邻的块级盒在**垂直方向**上的外边距（`margin-top` 和 `margin-bottom`）会合并（折叠）成一个单一的外边距。
+> - **计算规则**: 合并后的大小等于参与折叠的多个外边距中**绝对值最大的那个**，而非它们的总和。
+> - **发生场景**: 主要发生在三种情况
+> 	1. 相邻的兄弟元素之间。
+> 	2. 父元素与其第一个/最后一个子元素之间（当它们之间没有 `border` 或 `padding` 分隔时）。
+> 	3. 空的块级盒自身（其 `margin-top` 和 `margin-bottom` 会折叠）。
+> - **阻止方法**: 最根本的方法是为其中一个元素**创建一个新的 BFC**（例如，为其设置 `display: flow-root` 或 `overflow: hidden`），这会创建一个独立的布局环境，从而阻止其与外部元素发生外边距折叠。
+
+**建立新的 BFC**: 一个块级容器（如 `<div>`）默认情况下并不会为其内容创建新的 BFC，其子元素会参与其父级所处的 BFC。只有当一个块级容器满足**至少一个**以下条件时，它才会为其内容建立一个全新的 BFC：
+
+- 根元素 (`<html>`)。
+- 浮动元素 (`float` 的值不为 `none`)。
+- 绝对定位元素 (`position` 的值为 `absolute` 或 `fixed`)。
+- 行内块元素 (`display` 的值为 `inline-block`)。
+- 表格单元格 (`display` 的值为 `table-cell`)。
+- 表格标题 (`display` 的值为 `table-caption`)。
+- `overflow` 属性的值不为 `visible` 的块元素。
+- `display` 的值为 `flow-root` 的元素。
+
+> [!example] BFC 的应用：清除浮动
+> 由于 BFC 在计算高度时会包含其内部的浮动元素，因此创建一个新的 BFC 是清除内部浮动的经典方法之一。
+> ```css
+> .container {
+>   overflow: auto; /* 或 display: flow-root; */
+>   border: 1px solid black;
+> }
+> .floated-box {
+>   float: left;
+>   width: 100px;
+>   height: 100px;
+> }
+> ```
+> 在这个例子中，`.container` 因为 `overflow: auto` 建立了一个新的 BFC，所以它的高度会“包裹”住内部的 `.floated-box`。
+
+## 行内格式化上下文 (Inline Formatting Context, IFC)
+
+当一个块容器盒中不包含任何块级盒时，它就会为其内容建立一个行内格式化上下文。
+
+**IFC 内部的布局规则**:
+
+1. 其内部的行内级盒 (inline-level boxes) 在水平方向上，一个接一个地放置。
+2. 这些盒会共享一个水平空间，直到该空间被占满，然后换行形成新的**行盒 (line box)**。
+3. 行盒的高度由其内部最高的行内盒决定。
+4. 水平方向的 `padding`, `border`, `margin` 会被尊重。垂直方向的 `padding` 和 `border` 视觉上有效，但通常不会影响行盒的高度。垂直方向的 `margin` 完全无效。
+
+```mermaid
+graph TD
+    subgraph "块容器 (建立 IFC)"
+        direction TB
+        subgraph "行盒 2 (Line Box)"
+		    D[行内盒 4] --> E[行内盒 5]
+		end
+        subgraph "行盒 1 (Line Box)"
+            A[行内盒 1] --> B[行内盒 2] --> C[行内盒 3]
+        end
+    end
+```
+
