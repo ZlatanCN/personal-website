@@ -1,8 +1,11 @@
 {
-  "frontend": 27,
-  "javascript": 19,
-  "performance": 9,
-  "react": 1,
+  "frontend": 40,
   "browser": 10,
+  "performance": 9,
+  "javascript": 19,
+  "css": 5,
+  "network": 5,
+  "security": 5,
+  "react": 1,
   "html": 1
 }

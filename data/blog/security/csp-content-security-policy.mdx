@@ -1,0 +1,38 @@
+---
+title: CSP（内容安全策略）
+tags: [Frontend, Security]
+summary: CSP（内容安全策略）是一种重要的计算机安全标准，旨在防止跨站脚本攻击、点击劫持等代码注入攻击。它通过定义一系列指令来控制浏览器加载和执行的资源。
+date: 2025-06-30
+lastmod: 2025-07-15
+draft: false
+---
+# 什么是 CSP
+
+CSP（内容安全策略）是一种重要的**计算机安全标准**，它的主要目的是**防止跨站脚本攻击、点击劫持以及其他一些代码注入攻击**。简单来说，CSP 允许网站管理员控制浏览器能够加载和执行哪些资源。
+
+# CSP 如何工作
+
+CSP 通过定义一系列**指令 (directives)** 来实现其功能。每个指令控制特定类型的资源或策略。以下是一些常用的指令：
+
+- `default-src`: 这是其他大多数指令的后备指令。如果没有为某个特定类型的资源（如 `script-src` 或 `style-src`）设置指令，那么就会使用 `default-src` 的值。
+- `script-src`: 定义可以加载和执行 JavaScript 的有效来源。
+- `style-src`: 定义可以加载和应用样式的有效来源。
+- `img-src`: 定义可以加载图片的有效来源。
+- `font-src`: 定义可以加载字体的有效来源。
+- `connect-src`: 限制可以通过脚本接口（如 `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`）加载的 URL。
+- `media-src`: 定义可以加载 HTML5 `<audio>` 和 `<video>` 元素的有效来源。
+- `frame-src`: 定义可以嵌入到 `<frame>` 和 `<iframe>` 标签中的有效来源。
+- `object-src`: 定义可以加载 `<object>`, `<embed>` 和 `<applet>` 标签中插件的有效来源。
+- `frame-ancestors`: 指定哪些父页面可以通过 `<frame>`, `<iframe>`, `<object>`, `<embed>`, 或 `<applet>` 嵌入当前页面。这个指令对于防止点击劫持非常重要。
+- `report-uri` / `report-to`: 指定当 CSP 策略被违反时，浏览器将违规报告发送到的 URL。这对于调试和监控 CSP 非常有用。
+
+> [!example] 一个简单的 CSP 策略
+> ```http
+> Content-Security-Policy: default-src 'self'; img-src *; media-src media1.com media2.com; script-src userscripts.example.com
+> ```
+> 
+> - `default-src 'self'`: 默认情况下，只允许加载来自同源（相同域名、协议和端口）的资源。`'self'` 是一个特殊的关键字。
+> - `img-src *`: 允许从任何来源加载图片。`*` 是一个通配符。
+> - `media-src media1.com media2.com`: 只允许从 `media1.com` 和 `media2.com` 加载音频和视频。
+> - `script-src userscripts.example.com`: 只允许从 `userscripts.example.com` 加载 JavaScript 文件。
+
