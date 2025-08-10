@@ -10,7 +10,6 @@ import { fromHtmlIsomorphic } from 'hast-util-from-html-isomorphic';
 // Remark packages
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
-import remarkMermaid from './lib/remark-mermaid';
 import {
   extractTocHeadings,
   remarkCodeTitles,
@@ -26,6 +25,7 @@ import rehypeKatexNoTranslate from 'rehype-katex-notranslate';
 import rehypeCitation from 'rehype-citation';
 import rehypePrismPlus from 'rehype-prism-plus';
 import rehypePresetMinify from 'rehype-preset-minify';
+import rehypeMermaid from 'rehype-mermaid';
 import siteMetadata from './data/siteMetadata';
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer.js';
 import prettier from 'prettier';
@@ -167,7 +167,6 @@ export default makeSource({
       remarkMath,
       remarkImgToJsx,
       remarkCallout,
-      remarkMermaid,
     ],
     rehypePlugins: [
       rehypeSlug,
@@ -186,6 +185,24 @@ export default makeSource({
       [rehypeCitation, { path: path.join(root, 'data') }],
       [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
       rehypePresetMinify,
+      [
+        rehypeMermaid,
+        {
+          strategy: 'inline-svg',
+          mermaidConfig: {
+            theme: 'default',
+            securityLevel: 'loose',
+            startOnLoad: false,
+            flowchart: {
+              htmlLabels: true,
+              useMaxWidth: true,
+            },
+            sequence: {
+              wrap: true,
+            },
+          },
+        },
+      ],
     ],
   },
   onSuccess: async (importData) => {

@@ -42,7 +42,7 @@ export default function PostLayout({
         });
       },
       {
-        rootMargin: '-20% 0px -75% 0px',
+        rootMargin: '-128px 0px -75% 0px',
       },
     );
 
