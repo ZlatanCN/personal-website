@@ -1,12 +1,12 @@
-import Image from './Image';
-import Link from './Link';
+import Image from './Image'
+import Link from './Link'
 
 type CardProps = {
-  title: string;
-  description: string;
-  imgSrc?: string;
-  href?: string;
-};
+  title: string
+  description: string
+  imgSrc?: string
+  href?: string
+}
 
 const Card = ({ title, description, imgSrc, href }: CardProps) => (
   <div className={'md max-w-[544px] p-4 md:w-1/2'}>
@@ -45,9 +45,7 @@ const Card = ({ title, description, imgSrc, href }: CardProps) => (
             title
           )}
         </h2>
-        <p className={'prose mb-3 max-w-none text-gray-500 dark:text-gray-400'}>
-          {description}
-        </p>
+        <p className={'prose mb-3 max-w-none text-gray-500 dark:text-gray-400'}>{description}</p>
         {href && (
           <Link
             href={href}
@@ -62,6 +60,6 @@ const Card = ({ title, description, imgSrc, href }: CardProps) => (
       </div>
     </div>
   </div>
-);
+)
 
-export default Card;
+export default Card

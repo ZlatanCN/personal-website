@@ -1,77 +1,59 @@
-'use client';
+'use client'
 
-import { ReactNode, useEffect, useState } from 'react';
-import { CoreContent } from 'pliny/utils/contentlayer';
-import type { Authors, Blog } from 'contentlayer/generated';
-import SectionContainer from '@/components/SectionContainer';
-import ScrollTopAndComment from '@/components/ScrollTopAndComment';
-import {
-  AuthorDetails,
-  PostBody,
-  PostFooter,
-  PostHeader,
-  TableOfContents,
-} from '@/components/blog';
-import { type TocItem } from 'pliny/mdx-plugins/remark-toc-headings';
+import { ReactNode, useEffect, useState } from 'react'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Authors, Blog } from 'contentlayer/generated'
+import SectionContainer from '@/components/SectionContainer'
+import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import { AuthorDetails, PostBody, PostFooter, PostHeader, TableOfContents } from '@/components/blog'
+import { type TocItem } from 'pliny/mdx-plugins/remark-toc-headings'
 
 interface LayoutProps {
-  content: CoreContent<Blog>;
-  authorDetails: CoreContent<Authors>[];
-  next?: { path: string; title: string };
-  prev?: { path: string; title: string };
-  children: ReactNode;
+  content: CoreContent<Blog>
+  authorDetails: CoreContent<Authors>[]
+  next?: { path: string; title: string }
+  prev?: { path: string; title: string }
+  children: ReactNode
 }
 
-export default function PostLayout({
-  content,
-  authorDetails,
-  next,
-  prev,
-  children,
-}: LayoutProps) {
-  const { filePath, path, slug, date, title, tags, toc } = content;
-  const [activeId, setActiveId] = useState<string>('');
+export default function PostLayout({ content, authorDetails, next, prev, children }: LayoutProps) {
+  const { filePath, path, slug, date, title, tags, toc } = content
+  const [activeId, setActiveId] = useState<string>('')
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
-            setActiveId(entry.target.getAttribute('id') || '');
+            setActiveId(entry.target.getAttribute('id') || '')
           }
-        });
+        })
       },
       {
         rootMargin: '-128px 0px -75% 0px',
-      },
-    );
+      }
+    )
 
     const headingElements = toc
       .map((item: TocItem) => {
-        const id = item.url.slice(1);
-        return document.getElementById(id);
+        const id = item.url.slice(1)
+        return document.getElementById(id)
       })
-      .filter((heading: HTMLElement | null) => heading !== null);
+      .filter((heading: HTMLElement | null) => heading !== null)
 
-    headingElements.forEach((heading: HTMLElement) =>
-      observer.observe(heading),
-    );
+    headingElements.forEach((heading: HTMLElement) => observer.observe(heading))
 
     return () => {
-      headingElements.forEach((heading: HTMLElement) =>
-        observer.unobserve(heading),
-      );
-      observer.disconnect();
-    };
-  }, [toc]);
+      headingElements.forEach((heading: HTMLElement) => observer.unobserve(heading))
+      observer.disconnect()
+    }
+  }, [toc])
 
   return (
     <SectionContainer>
       <ScrollTopAndComment />
       <article>
-        <div
-          className={'xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700'}
-        >
+        <div className={'xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700'}>
           <PostHeader date={date} title={title} />
           <section
             className={
@@ -98,5 +80,5 @@ export default function PostLayout({
         </div>
       </article>
     </SectionContainer>
-  );
+  )
 }

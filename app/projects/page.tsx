@@ -1,8 +1,8 @@
-import projectsData from '@/data/projectsData';
-import Card from '@/components/Card';
-import { genPageMetadata } from 'app/seo';
+import projectsData from '@/data/projectsData'
+import Card from '@/components/Card'
+import { genPageMetadata } from 'app/seo'
 
-export const metadata = genPageMetadata({ title: 'Projects' });
+export const metadata = genPageMetadata({ title: 'Projects' })
 
 export default function Projects() {
   return (
@@ -17,13 +17,12 @@ export default function Projects() {
             Projects
           </h1>
           <p className={'text-lg leading-7 text-gray-500 dark:text-gray-400'}>
-            Feel free to explore and reach out if you have any questions or
-            feedback!
+            Feel free to explore and reach out if you have any questions or feedback!
           </p>
         </div>
         <div className={'container py-12'}>
           <div className={'-m-4 flex flex-wrap'}>
-            {projectsData.map((d) => (
+            {projectsData.map(d => (
               <Card
                 key={d.title}
                 title={d.title}
@@ -36,5 +35,5 @@ export default function Projects() {
         </div>
       </div>
     </>
-  );
+  )
 }

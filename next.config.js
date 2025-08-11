@@ -1,10 +1,10 @@
-import { withContentlayer } from 'next-contentlayer2';
-import { codeInspectorPlugin } from 'code-inspector-plugin';
-import bundleAnalyzer from '@next/bundle-analyzer';
+import bundleAnalyzer from '@next/bundle-analyzer'
+import { codeInspectorPlugin } from 'code-inspector-plugin'
+import { withContentlayer } from 'next-contentlayer2'
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
-});
+})
 
 // You might need to insert additional domains in script-src if you are using external services
 const ContentSecurityPolicy = `
@@ -16,7 +16,7 @@ const ContentSecurityPolicy = `
       connect-src *;
       font-src 'self';
       frame-src giscus.app
-    `;
+    `
 
 const securityHeaders = [
   {
@@ -47,11 +47,11 @@ const securityHeaders = [
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=()',
   },
-];
+]
 
-const output = process.env.EXPORT ? 'export' : undefined;
-const basePath = process.env.BASE_PATH || undefined;
-const unoptimized = process.env.UNOPTIMIZED ? true : undefined;
+const output = process.env.EXPORT ? 'export' : undefined
+const basePath = process.env.BASE_PATH || undefined
+const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 
 const nextConfig = {
   output,
@@ -59,9 +59,6 @@ const nextConfig = {
   reactStrictMode: true,
   trailingSlash: false,
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-  eslint: {
-    dirs: ['app', 'components', 'layouts', 'scripts'],
-  },
   images: {
     remotePatterns: [
       {
@@ -77,28 +74,26 @@ const nextConfig = {
         source: '/(.*)',
         headers: securityHeaders,
       },
-    ];
+    ]
   },
   webpack: (config, { dev }) => {
     config.module.rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
-    });
+    })
 
     if (dev) {
-      config.plugins.push(
-        codeInspectorPlugin({ bundler: 'webpack', editor: 'webstorm' }),
-      );
+      config.plugins.push(codeInspectorPlugin({ bundler: 'webpack', editor: 'webstorm' }))
     }
 
-    return config;
+    return config
   },
   experimental: {
     optimizeCss: true,
     reactCompiler: true,
   },
-};
+}
 
-const plugins = [withContentlayer, withBundleAnalyzer];
+const plugins = [withContentlayer, withBundleAnalyzer]
 
-export default plugins.reduce((acc, next) => next(acc), nextConfig);
+export default plugins.reduce((acc, next) => next(acc), nextConfig)

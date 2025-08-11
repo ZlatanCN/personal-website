@@ -1,12 +1,12 @@
-import { memo } from 'react';
-import Image from '@/components/Image';
-import Link from '@/components/Link';
-import { CoreContent } from 'pliny/utils/contentlayer';
-import type { Authors } from 'contentlayer/generated';
+import { memo } from 'react'
+import Image from '@/components/Image'
+import Link from '@/components/Link'
+import { CoreContent } from 'pliny/utils/contentlayer'
+import type { Authors } from 'contentlayer/generated'
 
 type AuthorDetailsProps = {
-  authorDetails: CoreContent<Authors>[];
-};
+  authorDetails: CoreContent<Authors>[]
+}
 
 const AuthorDetails = memo(({ authorDetails }: AuthorDetailsProps) => {
   return (
@@ -22,7 +22,7 @@ const AuthorDetails = memo(({ authorDetails }: AuthorDetailsProps) => {
             'flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-y-8 xl:space-x-0'
           }
         >
-          {authorDetails.map((author) => (
+          {authorDetails.map(author => (
             <li className={'flex items-center space-x-2'} key={author.name}>
               {author.avatar && (
                 <Image
@@ -37,9 +37,7 @@ const AuthorDetails = memo(({ authorDetails }: AuthorDetailsProps) => {
               )}
               <dl className={'text-sm leading-5 font-medium whitespace-nowrap'}>
                 <dt className={'sr-only'}>Name</dt>
-                <dd className={'text-gray-900 dark:text-gray-100'}>
-                  {author.name}
-                </dd>
+                <dd className={'text-gray-900 dark:text-gray-100'}>{author.name}</dd>
                 {/*<dt className={'sr-only'}>Twitter</dt>*/}
                 {/*<dd>*/}
                 {/*  {author.twitter && (*/}
@@ -74,9 +72,9 @@ const AuthorDetails = memo(({ authorDetails }: AuthorDetailsProps) => {
         </ul>
       </dd>
     </dl>
-  );
-});
+  )
+})
 
-AuthorDetails.displayName = 'AuthorDetails';
+AuthorDetails.displayName = 'AuthorDetails'
 
-export { AuthorDetails };
+export { AuthorDetails }

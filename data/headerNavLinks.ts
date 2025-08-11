@@ -4,6 +4,6 @@ const HEADER_NAV_LINKS = Object.freeze([
   { href: '/tags', title: 'Tags' },
   { href: '/projects', title: 'Projects' },
   { href: '/about', title: 'About' },
-]);
+])
 
-export { HEADER_NAV_LINKS };
+export { HEADER_NAV_LINKS }

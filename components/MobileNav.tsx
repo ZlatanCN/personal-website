@@ -1,47 +1,34 @@
-'use client';
+'use client'
 
-import {
-  Dialog,
-  DialogPanel,
-  Transition,
-  TransitionChild,
-} from '@headlessui/react';
-import {
-  disableBodyScroll,
-  enableBodyScroll,
-  clearAllBodyScrollLocks,
-} from 'body-scroll-lock';
-import { Fragment, useState, useEffect, useRef } from 'react';
-import Link from './Link';
-import { HEADER_NAV_LINKS } from '@/data/headerNavLinks';
+import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react'
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock'
+import { Fragment, useState, useEffect, useRef } from 'react'
+import Link from './Link'
+import { HEADER_NAV_LINKS } from '@/data/headerNavLinks'
 
 const MobileNav = () => {
-  const [navShow, setNavShow] = useState(false);
-  const navRef = useRef(null);
+  const [navShow, setNavShow] = useState(false)
+  const navRef = useRef(null)
 
   const onToggleNav = () => {
-    setNavShow((status) => {
+    setNavShow(status => {
       if (status) {
-        enableBodyScroll(navRef.current);
+        enableBodyScroll(navRef.current)
       } else {
         // Prevent scrolling
-        disableBodyScroll(navRef.current);
+        disableBodyScroll(navRef.current)
       }
-      return !status;
-    });
-  };
+      return !status
+    })
+  }
 
   useEffect(() => {
-    return clearAllBodyScrollLocks;
-  });
+    return clearAllBodyScrollLocks
+  })
 
   return (
     <>
-      <button
-        aria-label={'Toggle Menu'}
-        onClick={onToggleNav}
-        className={'sm:hidden'}
-      >
+      <button aria-label={'Toggle Menu'} onClick={onToggleNav} className={'sm:hidden'}>
         <svg
           xmlns={'http://www.w3.org/2000/svg'}
           viewBox={'0 0 20 20'}
@@ -95,7 +82,7 @@ const MobileNav = () => {
                   'mt-8 flex h-full basis-0 flex-col items-start overflow-y-auto pt-2 pl-12 text-left'
                 }
               >
-                {HEADER_NAV_LINKS.map((link) => (
+                {HEADER_NAV_LINKS.map(link => (
                   <Link
                     key={link.title}
                     href={link.href}
@@ -135,7 +122,7 @@ const MobileNav = () => {
         </Dialog>
       </Transition>
     </>
-  );
-};
+  )
+}
 
-export default MobileNav;
+export default MobileNav

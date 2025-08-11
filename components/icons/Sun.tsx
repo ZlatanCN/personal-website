@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo } from 'react'
 
 const Sun = memo(() => {
   return (
@@ -6,9 +6,7 @@ const Sun = memo(() => {
       xmlns={'http://www.w3.org/2000/svg'}
       viewBox={'0 0 20 20'}
       fill={'currentColor'}
-      className={
-        'h-6 w-6 cursor-pointer opacity-100 transition-opacity duration-300 ease-in-out'
-      }
+      className={'h-6 w-6 cursor-pointer opacity-100 transition-opacity duration-300 ease-in-out'}
     >
       <path
         fillRule={'evenodd'}
@@ -18,9 +16,9 @@ const Sun = memo(() => {
         clipRule={'evenodd'}
       />
     </svg>
-  );
-});
+  )
+})
 
-Sun.displayName = 'Sun';
+Sun.displayName = 'Sun'
 
-export { Sun };
+export { Sun }

@@ -1,22 +1,22 @@
-import 'css/tailwind.css';
-import 'pliny/search/algolia.css';
+import 'css/tailwind.css'
+import 'pliny/search/algolia.css'
 
-import { Space_Grotesk } from 'next/font/google';
-import { Analytics, AnalyticsConfig } from 'pliny/analytics';
-import { SearchConfig, SearchProvider } from 'pliny/search';
-import Header from '@/components/Header';
-import SectionContainer from '@/components/SectionContainer';
-import Footer from '@/components/Footer';
-import siteMetadata from '@/data/siteMetadata';
-import { ThemeProviders } from './theme-providers';
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import type { Metadata } from 'next'
+import { Space_Grotesk } from 'next/font/google'
+import { Analytics, type AnalyticsConfig } from 'pliny/analytics'
+import { type SearchConfig, SearchProvider } from 'pliny/search'
+import type { ReactNode } from 'react'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import SectionContainer from '@/components/SectionContainer'
+import siteMetadata from '@/data/siteMetadata'
+import { ThemeProviders } from './theme-providers'
 
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-space-grotesk',
-});
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteMetadata.siteUrl),
@@ -56,57 +56,40 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     images: [siteMetadata.socialBanner],
   },
-};
+}
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-  const basePath = process.env.BASE_PATH || '';
+  const basePath = process.env.BASE_PATH || ''
 
   return (
     <html
-      lang={siteMetadata.language}
       className={`${space_grotesk.variable} scrollbar scrollbar-thumb overflow-auto scroll-smooth`}
+      lang={siteMetadata.language}
       suppressHydrationWarning
     >
       <link
+        href={`${basePath}/static/favicons/apple-touch-icon.png`}
         rel={'apple-touch-icon'}
         sizes={'76x76'}
-        href={`${basePath}/static/favicons/apple-touch-icon.png`}
       />
       <link
-        rel={'icon'}
-        type={'image/png'}
-        sizes={'96x96'}
         href={`${basePath}/static/favicons/favicon-96x96.png`}
+        rel={'icon'}
+        sizes={'96x96'}
+        type={'image/png'}
       />
-      <link
-        rel={'manifest'}
-        href={`${basePath}/static/favicons/site.webmanifest`}
-      />
-      <meta name={'msapplication-TileColor'} content={'#000000'} />
-      <meta
-        name={'theme-color'}
-        media={'(prefers-color-scheme: light)'}
-        content={'#fff'}
-      />
-      <meta
-        name={'theme-color'}
-        media={'(prefers-color-scheme: dark)'}
-        content={'#000'}
-      />
-      <link
-        rel={'alternate'}
-        type={'application/rss+xml'}
-        href={`${basePath}/feed.xml`}
-      />
+      <link href={`${basePath}/static/favicons/site.webmanifest`} rel={'manifest'} />
+      <meta content={'#000000'} name={'msapplication-TileColor'} />
+      <meta content={'#fff'} media={'(prefers-color-scheme: light)'} name={'theme-color'} />
+      <meta content={'#000'} media={'(prefers-color-scheme: dark)'} name={'theme-color'} />
+      <link href={`${basePath}/feed.xml`} rel={'alternate'} type={'application/rss+xml'} />
       <body
         className={
           'bg-white pl-[calc(100vw-100%)] text-black antialiased dark:bg-gray-950 dark:text-white'
         }
       >
         <ThemeProviders>
-          <Analytics
-            analyticsConfig={siteMetadata.analytics as AnalyticsConfig}
-          />
+          <Analytics analyticsConfig={siteMetadata.analytics as AnalyticsConfig} />
           <SectionContainer>
             <SearchProvider searchConfig={siteMetadata.search as SearchConfig}>
               <Header />
@@ -117,5 +100,5 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </ThemeProviders>
       </body>
     </html>
-  );
+  )
 }

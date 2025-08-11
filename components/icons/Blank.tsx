@@ -1,9 +1,9 @@
-import { memo } from 'react';
+import { memo } from 'react'
 
 const Blank = memo(() => {
-  return <svg className={'h-6 w-6'} />;
-});
+  return <svg className={'h-6 w-6'} />
+})
 
-Blank.displayName = 'Blank';
+Blank.displayName = 'Blank'
 
-export { Blank };
+export { Blank }

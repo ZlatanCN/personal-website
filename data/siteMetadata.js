@@ -99,6 +99,6 @@ const siteMetadata = {
     //   indexName: 'docsearch',
     // },
   },
-};
+}
 
-export default siteMetadata;
+export default siteMetadata
