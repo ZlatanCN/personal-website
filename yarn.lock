@@ -2825,7 +2825,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/esbuild@npm:^3.0.0, @mdx-js/esbuild@npm:latest":
+"@mdx-js/esbuild@npm:^3.0.0":
   version: 3.1.0
   resolution: "@mdx-js/esbuild@npm:3.1.0"
   dependencies:
@@ -2840,7 +2840,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/mdx@npm:^3.0.0, @mdx-js/mdx@npm:latest":
+"@mdx-js/mdx@npm:^3.0.0":
   version: 3.1.0
   resolution: "@mdx-js/mdx@npm:3.1.0"
   dependencies:
@@ -11267,8 +11267,6 @@ __metadata:
   dependencies:
     "@biomejs/biome": 2.1.4
     "@headlessui/react": 2.2.0
-    "@mdx-js/esbuild": latest
-    "@mdx-js/mdx": latest
     "@next/bundle-analyzer": 15.2.4
     "@r4ai/remark-callout": ^0.6.2
     "@svgr/webpack": ^8.0.1
