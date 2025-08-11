@@ -6,7 +6,9 @@
   "scripts": {
     "start": "next dev -H 0.0.0.0",
     "dev": "cross-env INIT_CWD=$PWD next dev",
-    "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "buildOld": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "build": "contentlayer2 build && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "postinstall": "contentlayer2 build",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "prepare": "husky",
@@ -15,6 +17,8 @@
   },
   "dependencies": {
     "@headlessui/react": "2.2.0",
+    "@mdx-js/esbuild": "latest",
+    "@mdx-js/mdx": "latest",
     "@next/bundle-analyzer": "15.2.4",
     "@r4ai/remark-callout": "^0.6.2",
     "@tailwindcss/forms": "^0.5.9",
