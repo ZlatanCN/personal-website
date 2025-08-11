@@ -10,8 +10,7 @@
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build",
     "prepare": "husky",
-    "lint": "biome check",
-    "format": "biome format --write"
+    "lint": "biome check --write --unsafe"
   },
   "dependencies": {
     "@headlessui/react": "2.2.0",

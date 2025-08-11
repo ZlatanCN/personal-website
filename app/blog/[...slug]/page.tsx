@@ -1,16 +1,16 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
-import { components } from '@/components/MDXComponents'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import { allCoreContent, coreContent, sortPosts } from 'pliny/utils/contentlayer'
 import type { Authors, Blog } from 'contentlayer/generated'
 import { allAuthors, allBlogs } from 'contentlayer/generated'
-import PostSimple from '@/layouts/PostSimple'
-import PostLayout from '@/layouts/PostLayout'
-import PostBanner from '@/layouts/PostBanner'
-import { Metadata } from 'next'
-import siteMetadata from '@/data/siteMetadata'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
+import { allCoreContent, coreContent, sortPosts } from 'pliny/utils/contentlayer'
+import { components } from '@/components/MDXComponents'
+import siteMetadata from '@/data/siteMetadata'
+import PostBanner from '@/layouts/PostBanner'
+import PostLayout from '@/layouts/PostLayout'
+import PostSimple from '@/layouts/PostSimple'
 
 const defaultLayout = 'PostLayout'
 const layouts = {
@@ -43,7 +43,7 @@ export async function generateMetadata(props: {
   }
   const ogImages = imageList.map(img => {
     return {
-      url: img && img.includes('http') ? img : siteMetadata.siteUrl + img,
+      url: img?.includes('http') ? img : siteMetadata.siteUrl + img,
     }
   })
 
@@ -97,7 +97,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   })
   const mainContent = coreContent(post)
   const jsonLd = post.structuredData
-  jsonLd['author'] = authorDetails.map(author => {
+  jsonLd.author = authorDetails.map(author => {
     return {
       '@type': 'Person',
       name: author.name,
@@ -109,10 +109,11 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
   return (
     <>
       <script
-        type={'application/ld+json'}
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: This is safe as we control the content
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        type={'application/ld+json'}
       />
-      <Layout content={mainContent} authorDetails={authorDetails} next={next} prev={prev}>
+      <Layout authorDetails={authorDetails} content={mainContent} next={next} prev={prev}>
         <MDXLayoutRenderer code={post.body.code} components={components} toc={post.toc} />
       </Layout>
     </>

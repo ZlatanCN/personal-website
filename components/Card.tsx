@@ -17,28 +17,28 @@ const Card = ({ title, description, imgSrc, href }: CardProps) => (
     >
       {imgSrc &&
         (href ? (
-          <Link href={href} aria-label={`Link to ${title}`}>
+          <Link aria-label={`Link to ${title}`} href={href}>
             <Image
               alt={title}
-              src={imgSrc}
               className={'object-cover object-center md:h-36 lg:h-48'}
-              width={544}
               height={306}
+              src={imgSrc}
+              width={544}
             />
           </Link>
         ) : (
           <Image
             alt={title}
-            src={imgSrc}
             className={'object-cover object-center md:h-36 lg:h-48'}
-            width={544}
             height={306}
+            src={imgSrc}
+            width={544}
           />
         ))}
       <div className={'p-6'}>
-        <h2 className={'mb-3 text-2xl leading-8 font-bold tracking-tight'}>
+        <h2 className={'mb-3 font-bold text-2xl leading-8 tracking-tight'}>
           {href ? (
-            <Link href={href} aria-label={`Link to ${title}`}>
+            <Link aria-label={`Link to ${title}`} href={href}>
               {title}
             </Link>
           ) : (
@@ -48,11 +48,11 @@ const Card = ({ title, description, imgSrc, href }: CardProps) => (
         <p className={'prose mb-3 max-w-none text-gray-500 dark:text-gray-400'}>{description}</p>
         {href && (
           <Link
-            href={href}
-            className={
-              'text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 text-base leading-6 font-medium'
-            }
             aria-label={`Link to ${title}`}
+            className={
+              'font-medium text-base text-primary-500 leading-6 hover:text-primary-600 dark:hover:text-primary-400'
+            }
+            href={href}
           >
             Learn more &rarr;
           </Link>

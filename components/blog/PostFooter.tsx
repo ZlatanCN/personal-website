@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react'
-import Tag from '@/components/Tag'
 import Link from '@/components/Link'
+import Tag from '@/components/Tag'
 
 type PostFooterProps = {
   tags: string[]
@@ -15,11 +15,11 @@ const PostFooter = memo(({ tags, path, prev, next }: PostFooterProps) => {
   return (
     <footer className={'xl:sticky xl:top-31 xl:flex-col'}>
       <div
-        className={'divide-gray-200 text-sm leading-5 font-medium xl:divide-y dark:divide-gray-700'}
+        className={'divide-gray-200 font-medium text-sm leading-5 xl:divide-y dark:divide-gray-700'}
       >
         {tags && (
           <div className={'py-4 xl:py-8'}>
-            <h2 className={'text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400'}>
+            <h2 className={'text-gray-500 text-xs uppercase tracking-wide dark:text-gray-400'}>
               Tags
             </h2>
             <div className={'flex flex-wrap'}>
@@ -31,9 +31,9 @@ const PostFooter = memo(({ tags, path, prev, next }: PostFooterProps) => {
         )}
         {(next || prev) && (
           <div className={'flex justify-between py-4 xl:block xl:space-y-8 xl:py-8'}>
-            {prev && prev.path && (
+            {prev?.path && (
               <div>
-                <h2 className={'text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400'}>
+                <h2 className={'text-gray-500 text-xs uppercase tracking-wide dark:text-gray-400'}>
                   Previous Article
                 </h2>
                 <div
@@ -43,9 +43,9 @@ const PostFooter = memo(({ tags, path, prev, next }: PostFooterProps) => {
                 </div>
               </div>
             )}
-            {next && next.path && (
+            {next?.path && (
               <div>
-                <h2 className={'text-xs tracking-wide text-gray-500 uppercase dark:text-gray-400'}>
+                <h2 className={'text-gray-500 text-xs uppercase tracking-wide dark:text-gray-400'}>
                   Next Article
                 </h2>
                 <div
@@ -60,9 +60,9 @@ const PostFooter = memo(({ tags, path, prev, next }: PostFooterProps) => {
       </div>
       <div className={'pt-4 xl:pt-8'}>
         <Link
-          href={`/${basePath}`}
-          className={'text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'}
           aria-label={'Back to the blog'}
+          className={'text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'}
+          href={`/${basePath}`}
         >
           &larr; Back to the blog
         </Link>

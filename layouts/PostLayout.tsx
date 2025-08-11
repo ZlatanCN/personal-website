@@ -1,12 +1,12 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
-import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Authors, Blog } from 'contentlayer/generated'
-import SectionContainer from '@/components/SectionContainer'
-import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import type { TocItem } from 'pliny/mdx-plugins/remark-toc-headings'
+import type { CoreContent } from 'pliny/utils/contentlayer'
+import { type ReactNode, useEffect, useState } from 'react'
 import { AuthorDetails, PostBody, PostFooter, PostHeader, TableOfContents } from '@/components/blog'
-import { type TocItem } from 'pliny/mdx-plugins/remark-toc-headings'
+import ScrollTopAndComment from '@/components/ScrollTopAndComment'
+import SectionContainer from '@/components/SectionContainer'
 
 interface LayoutProps {
   content: CoreContent<Blog>
@@ -66,7 +66,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               }
             >
               <AuthorDetails authorDetails={authorDetails} />
-              <PostFooter path={path} tags={tags} next={next} prev={prev} />
+              <PostFooter next={next} path={path} prev={prev} tags={tags} />
             </aside>
             <main className={'xl:col-span-3'}>
               <PostBody filePath={filePath} path={path} slug={slug}>
@@ -74,7 +74,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               </PostBody>
             </main>
             <aside className={'xl:col-span-1'}>
-              <TableOfContents toc={toc} activeId={activeId} />
+              <TableOfContents activeId={activeId} toc={toc} />
             </aside>
           </section>
         </div>

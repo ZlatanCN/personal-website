@@ -1,11 +1,11 @@
-import { SVGProps } from 'react'
+import type { SVGProps } from 'react'
 
 // Icons taken from: https://simpleicons.org/
 // To add a new icon, add a new function here and add it to components in social-icons/index.tsx
 
 const Facebook = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Facebook</title>
       <path
         d={
@@ -18,7 +18,7 @@ const Facebook = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Github = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>GitHub</title>
       <path
         d={
@@ -31,7 +31,7 @@ const Github = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Linkedin = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Linkedin</title>
       <path
         d={
@@ -44,7 +44,7 @@ const Linkedin = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Mail = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 20 20'} {...svgProps}>
+    <svg viewBox={'0 0 20 20'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Mail</title>
       <path d={'M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z'}></path>
       <path d={'M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z'}></path>
@@ -54,7 +54,7 @@ const Mail = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Twitter = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Twitter</title>
       <path
         d={
@@ -67,7 +67,7 @@ const Twitter = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const X = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>X</title>
       <path
         d={
@@ -80,7 +80,7 @@ const X = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Youtube = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Youtube</title>
       <path
         d={
@@ -93,7 +93,7 @@ const Youtube = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Mastodon = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Mastodon</title>
       <path
         d={
@@ -106,7 +106,7 @@ const Mastodon = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Threads = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Threads</title>
       <path
         d={
@@ -119,7 +119,7 @@ const Threads = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Instagram = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Instagram</title>
       <path
         d={
@@ -132,7 +132,7 @@ const Instagram = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Medium = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Medium</title>
       <path
         d={
@@ -145,7 +145,7 @@ const Medium = (svgProps: SVGProps<SVGSVGElement>) => {
 
 const Bluesky = (svgProps: SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns={'http://www.w3.org/2000/svg'} viewBox={'0 0 24 24'} {...svgProps}>
+    <svg viewBox={'0 0 24 24'} xmlns={'http://www.w3.org/2000/svg'} {...svgProps}>
       <title>Bluesky</title>
       <path
         d={

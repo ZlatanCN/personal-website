@@ -36,11 +36,15 @@ export default function Comments({ slug }: { slug: string }) {
 
   return (
     <>
-      {!siteMetadata.comments?.provider ? null : loadComments ? (
-        <CommentsComponent commentsConfig={siteMetadata.comments} slug={slug} />
-      ) : (
-        <button onClick={() => setLoadComments(true)}>Load Comments</button>
-      )}
+      {siteMetadata.comments?.provider ? (
+        loadComments ? (
+          <CommentsComponent commentsConfig={siteMetadata.comments} slug={slug} />
+        ) : (
+          <button onClick={() => setLoadComments(true)} type={'button'}>
+            Load Comments
+          </button>
+        )
+      ) : null}
     </>
   )
 }

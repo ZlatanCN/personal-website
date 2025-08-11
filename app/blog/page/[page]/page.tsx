@@ -21,7 +21,7 @@ export default async function Page(props: { params: Promise<{ page: string }> })
   const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
 
   // Return 404 for invalid page numbers or empty pages
-  if (pageNumber <= 0 || pageNumber > totalPages || isNaN(pageNumber)) {
+  if (pageNumber <= 0 || pageNumber > totalPages || Number.isNaN(pageNumber)) {
     return notFound()
   }
   const initialDisplayPosts = posts.slice(

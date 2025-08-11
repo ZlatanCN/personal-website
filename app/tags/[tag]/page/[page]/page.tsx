@@ -1,9 +1,9 @@
+import tagData from 'app/tag-data.json'
+import { allBlogs } from 'contentlayer/generated'
 import { slug } from 'github-slugger'
+import { notFound } from 'next/navigation'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 import ListLayout from '@/layouts/ListLayoutWithTags'
-import { allBlogs } from 'contentlayer/generated'
-import tagData from 'app/tag-data.json'
-import { notFound } from 'next/navigation'
 
 const POSTS_PER_PAGE = 5
 
@@ -25,12 +25,12 @@ export default async function TagPage(props: { params: Promise<{ tag: string; pa
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
   const pageNumber = parseInt(params.page)
   const filteredPosts = allCoreContent(
-    sortPosts(allBlogs.filter(post => post.tags && post.tags.map(t => slug(t)).includes(tag)))
+    sortPosts(allBlogs.filter(post => post.tags?.map(t => slug(t)).includes(tag)))
   )
   const totalPages = Math.ceil(filteredPosts.length / POSTS_PER_PAGE)
 
   // Return 404 for invalid page numbers or empty pages
-  if (pageNumber <= 0 || pageNumber > totalPages || isNaN(pageNumber)) {
+  if (pageNumber <= 0 || pageNumber > totalPages || Number.isNaN(pageNumber)) {
     return notFound()
   }
   const initialDisplayPosts = filteredPosts.slice(
@@ -44,9 +44,9 @@ export default async function TagPage(props: { params: Promise<{ tag: string; pa
 
   return (
     <ListLayout
-      posts={filteredPosts}
       initialDisplayPosts={initialDisplayPosts}
       pagination={pagination}
+      posts={filteredPosts}
       title={title}
     />
   )

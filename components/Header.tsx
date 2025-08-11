@@ -20,7 +20,7 @@ const Header = () => {
             <Logo />
           </div>
           {typeof siteMetadata.headerTitle === 'string' ? (
-            <div className={'hidden h-6 text-2xl font-semibold sm:block'}>
+            <div className={'hidden h-6 font-semibold text-2xl sm:block'}>
               {siteMetadata.headerTitle}
             </div>
           ) : (
@@ -28,7 +28,7 @@ const Header = () => {
           )}
         </div>
       </Link>
-      <div className={'flex items-center space-x-4 leading-5 sm:-mr-6 sm:space-x-6'}>
+      <div className={'sm:-mr-6 flex items-center space-x-4 leading-5 sm:space-x-6'}>
         <div
           className={
             'no-scrollbar hidden max-w-40 items-center gap-x-4 overflow-x-auto sm:flex md:max-w-72 lg:max-w-96'
@@ -37,7 +37,7 @@ const Header = () => {
           {HEADER_NAV_LINKS.filter(link => link.href !== '/').map(link => (
             <Link
               className={
-                'hover:text-primary-500 dark:hover:text-primary-400 m-1 font-medium text-gray-900 dark:text-gray-100'
+                'm-1 font-medium text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400'
               }
               href={link.href}
               key={link.title}

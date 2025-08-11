@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, ReactNode } from 'react'
+import { type ReactNode, useRef, useState } from 'react'
 import { Clipboard } from '@/components/icons'
 
 type PreProps = {
@@ -33,7 +33,14 @@ const Pre = ({ children }: PreProps) => {
   }
 
   return (
-    <div ref={textInput} onMouseEnter={onEnter} onMouseLeave={onExit} className={'relative'}>
+    // biome-ignore lint/a11y/useSemanticElements: Using div for custom styling
+    <div
+      className={'relative'}
+      onMouseEnter={onEnter}
+      onMouseLeave={onExit}
+      ref={textInput}
+      role={'region'}
+    >
       <button
         className={`absolute top-2 right-2 size-8 cursor-pointer rounded border-2 bg-transparent p-1 transition-opacity duration-200 ${
           hovered ? 'opacity-100' : 'opacity-0'
@@ -43,6 +50,7 @@ const Pre = ({ children }: PreProps) => {
             : 'border-gray-700 dark:border-gray-300'
         }`}
         onClick={onCopy}
+        type={'button'}
       >
         <Clipboard copied={copied} />
       </button>

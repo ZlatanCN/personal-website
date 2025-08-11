@@ -17,7 +17,7 @@ interface LayoutProps {
 }
 
 export default function PostLayout({ content, next, prev, children }: LayoutProps) {
-  const { path, slug, date, title } = content
+  const { slug, date, title } = content
 
   return (
     <SectionContainer>
@@ -27,14 +27,14 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
           <header>
             <div
               className={
-                'space-y-1 border-b border-gray-200 pb-10 text-center dark:border-gray-700'
+                'space-y-1 border-gray-200 border-b pb-10 text-center dark:border-gray-700'
               }
             >
               <dl>
                 <div>
                   <dt className={'sr-only'}>Published on</dt>
                   <dd
-                    className={'text-base leading-6 font-medium text-gray-500 dark:text-gray-400'}
+                    className={'font-medium text-base text-gray-500 leading-6 dark:text-gray-400'}
                   >
                     <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                   </dd>
@@ -68,10 +68,10 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
             <footer>
               <div
                 className={
-                  'flex flex-col text-sm font-medium sm:flex-row sm:justify-between sm:text-base'
+                  'flex flex-col font-medium text-sm sm:flex-row sm:justify-between sm:text-base'
                 }
               >
-                {prev && prev.path && (
+                {prev?.path && (
                   <div className={'pt-4 xl:pt-8'}>
                     <Link
                       aria-label={`Previous post: ${prev.title}`}
@@ -84,7 +84,7 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
                     </Link>
                   </div>
                 )}
-                {next && next.path && (
+                {next?.path && (
                   <div className={'pt-4 xl:pt-8'}>
                     <Link
                       aria-label={`Next post: ${next.title}`}
