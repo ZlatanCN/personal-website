@@ -27,7 +27,7 @@ const Header = () => {
       <nav className={'sm:-mr-6 group flex items-center space-x-4 leading-5 sm:space-x-6'}>
         <ul
           className={
-            "anchor/hovered-link no-scrollbar after:anchored/hovered-link hidden max-w-40 items-center overflow-x-auto rounded-full border border-gray-200 bg-after-navLink px-4 py-1 after:absolute after:top-anchor-top after:right-anchor-right after:bottom-anchor-bottom after:left-anchor-left after:rounded-xl after:border after:border-transparent after:border-solid after:opacity-0 after:transition-all after:duration-500 after:content-[''] group-has-[a:hover,a:focus-visible]:after:opacity-100 sm:flex md:max-w-72 lg:max-w-96 dark:border-gray-800"
+            "anchor/hovered-link no-scrollbar after:anchored/hovered-link hidden max-w-40 items-center overflow-x-auto rounded-full border border-gray-200 bg-after-navLink px-4 py-1 after:absolute after:top-anchor-top after:right-anchor-right after:bottom-anchor-bottom after:left-anchor-left after:rounded-xl after:border after:border-transparent after:border-solid after:opacity-0 after:transition-all after:duration-500 after:content-[''] group-has-[a:hover,a:focus-visible]:after:opacity-100 md:flex md:max-w-96 dark:border-gray-800"
           }
         >
           {HEADER_NAV_LINKS.filter(link => link.href !== '/').map(link => (

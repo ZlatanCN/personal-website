@@ -30,7 +30,7 @@ const MobileNav = () => {
     <>
       <button
         aria-label={'Toggle Menu'}
-        className={'sm:hidden'}
+        className={'md:hidden'}
         onClick={onToggleNav}
         type={'button'}
       >
