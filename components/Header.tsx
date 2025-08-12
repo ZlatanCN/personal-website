@@ -19,37 +19,34 @@ const Header = () => {
           <div className={'mr-3'}>
             <Logo />
           </div>
-          {typeof siteMetadata.headerTitle === 'string' ? (
-            <div className={'hidden h-6 font-semibold text-2xl sm:block'}>
-              {siteMetadata.headerTitle}
-            </div>
-          ) : (
-            siteMetadata.headerTitle
-          )}
+          <div className={'hidden h-6 font-semibold text-2xl sm:block'}>
+            {siteMetadata.headerTitle}
+          </div>
         </div>
       </Link>
-      <div className={'sm:-mr-6 flex items-center space-x-4 leading-5 sm:space-x-6'}>
-        <div
+      <nav className={'sm:-mr-6 group flex items-center space-x-4 leading-5 sm:space-x-6'}>
+        <ul
           className={
-            'no-scrollbar hidden max-w-40 items-center gap-x-4 overflow-x-auto sm:flex md:max-w-72 lg:max-w-96'
+            "anchor/hovered-link no-scrollbar after:anchored/hovered-link hidden max-w-40 items-center overflow-x-auto rounded-full border border-gray-200 bg-after-navLink px-4 py-1 after:absolute after:top-anchor-top after:right-anchor-right after:bottom-anchor-bottom after:left-anchor-left after:rounded-xl after:border after:border-transparent after:border-solid after:opacity-0 after:transition-all after:duration-500 after:content-[''] group-has-[a:hover,a:focus-visible]:after:opacity-100 sm:flex md:max-w-72 lg:max-w-96 dark:border-gray-800"
           }
         >
           {HEADER_NAV_LINKS.filter(link => link.href !== '/').map(link => (
-            <Link
-              className={
-                'm-1 font-medium text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400'
-              }
-              href={link.href}
-              key={link.title}
-            >
-              {link.title}
-            </Link>
+            <li key={link.title}>
+              <Link
+                className={
+                  'hover:anchor/hovered-link focus-visible:anchor/hovered-link relative z-10 block px-4 py-2 font-medium text-gray-900 dark:text-gray-100'
+                }
+                href={link.href}
+              >
+                {link.title}
+              </Link>
+            </li>
           ))}
-        </div>
+        </ul>
         <SearchButton />
         <ThemeSwitch />
         <MobileNav />
-      </div>
+      </nav>
     </header>
   )
 }

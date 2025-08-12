@@ -3884,6 +3884,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@toolwind/anchors@npm:^1.0.10":
+  version: 1.0.10
+  resolution: "@toolwind/anchors@npm:1.0.10"
+  peerDependencies:
+    tailwindcss: ">=3.0.0 || >=4.0.0"
+  checksum: 517b5600b439aefd0445a1132b5d2e7b6388a23f2cc55af0d5ae361064d2809c649486e929d5a888c570c785a0d48f2214ba430089dd0caf6e37a0b586b79a5a
+  languageName: node
+  linkType: hard
+
 "@trysound/sax@npm:0.2.0":
   version: 0.2.0
   resolution: "@trysound/sax@npm:0.2.0"
@@ -11273,6 +11282,7 @@ __metadata:
     "@tailwindcss/forms": ^0.5.9
     "@tailwindcss/postcss": ^4.0.5
     "@tailwindcss/typography": ^0.5.15
+    "@toolwind/anchors": ^1.0.10
     "@types/mdx": ^2.0.12
     "@types/react": ^19.0.8
     babel-plugin-react-compiler: rc

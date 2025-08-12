@@ -8,7 +8,7 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "**/*.{js,jsx,ts,tsx,json,jsonc}",
+      "**/*.{js,jsx,ts,tsx,json,jsonc,css}",
       "!node_modules/**",
       "!.next/**",
       "!out/**",
@@ -23,7 +23,7 @@
   },
   "formatter": {
     "enabled": true,
-    "formatWithErrors": false,
+    "formatWithErrors": true,
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
@@ -48,7 +48,8 @@
       "correctness": {
         "recommended": true,
         "noUnusedVariables": "error",
-        "noUnusedImports": "error"
+        "noUnusedImports": "error",
+        "noUnknownProperty": "warn"
       },
       "nursery": {
         "recommended": false,
@@ -67,15 +68,34 @@
         "useImportType": "error",
         "useConst": "error",
         "useTemplate": "warn",
-        "noNegationElse": "warn"
+        "noNegationElse": "warn",
+        "noDescendingSpecificity": "warn"
       },
       "suspicious": {
         "recommended": true,
         "noExplicitAny": "warn",
         "noEmptyBlockStatements": "warn",
         "noConfusingVoidType": "error",
-        "noDoubleEquals": "off"
+        "noDoubleEquals": "off",
+        "noEmptyBlock": "warn",
+        "noIrregularWhitespace": "warn"
       }
+    }
+  },
+  "css": {
+    "parser": {
+      "allowWrongLineComments": false
+    },
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineEnding": "lf",
+      "lineWidth": 100,
+      "quoteStyle": "double"
+    },
+    "linter": {
+      "enabled": true
     }
   },
   "javascript": {

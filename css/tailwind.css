@@ -1,4 +1,5 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "@toolwind/anchors";
 
 @plugin "@tailwindcss/forms";
 @plugin '@tailwindcss/typography';
@@ -11,8 +12,9 @@
 /* Core theme configuration */
 @theme {
   /* Font families */
-  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-  'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans:
+    var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   /* Colors */
   /* Copied from https://tailwindcss.com/docs/theme#default-theme-variable-reference */
@@ -77,8 +79,8 @@
   a:focus-visible,
   button:focus-visible {
     outline: 2px solid;
-    border-radius: var(--radius-sm);
     outline-color: var(--color-primary-500);
+    border-radius: var(--radius-sm);
   }
 
   /* 为标题添加滚动边距以调整锚点链接的定位 */
@@ -117,11 +119,11 @@
 
     /* 移除 inline code 的前后的单引号 */
 
-    :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::before {
+    :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *))::before {
       content: none;
     }
 
-    :where(code):not(:where([class~="not-prose"],[class~="not-prose"] *))::after {
+    :where(code):not(:where([class~="not-prose"], [class~="not-prose"] *))::after {
       content: none;
     }
   }
@@ -196,9 +198,9 @@ input:-webkit-autofill:focus {
 }
 
 .content-header-link {
-  opacity: 0;
-  margin-left: -24px;
   padding-right: 4px;
+  margin-left: -24px;
+  opacity: 0;
 }
 
 .content-header:hover .content-header-link,
@@ -236,12 +238,10 @@ Source: https://github.com/r4ai/remark-callout/blob/main/packages/website/src/pa
     }
 
     &::before {
-      @apply mt-1 block h-5 w-5 bg-current content-[""];
+      mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNUwyIDIybDEuNS01LjVabS0yIDJsNCA0Ii8+PC9zdmc+");
       mask-repeat: no-repeat;
       mask-size: cover;
-
-      /* lucide-pencil */
-      mask-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTE3IDNhMi44NSAyLjgzIDAgMSAxIDQgNEw3LjUgMjAuNUwyIDIybDEuNS01LjVabS0yIDJsNCA0Ii8+PC9zdmc+");
+      @apply mt-1 block h-5 w-5 bg-current content-[""];
     }
   }
 
@@ -262,12 +262,12 @@ details[data-callout] > summary[data-callout-title] {
   }
 
   &::after {
-    @apply w-full bg-right bg-no-repeat;
     content: "";
 
     /* lucide:chevron-right */
     background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzg4ODg4OCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiIGQ9Im05IDE4bDYtNmwtNi02Ii8+PC9zdmc+");
     background-size: 1.5rem;
+    @apply w-full bg-right bg-no-repeat;
   }
 
   &:not(:empty)::after {
@@ -602,6 +602,27 @@ details[data-callout][open] > summary[data-callout-title]::after {
   content: "Cite";
 }
 
+/* 自定义滚动条样式 */
 .scrollbar-thumb {
   @apply scrollbar-thumb-gray-100 scrollbar-hover:scrollbar-thumb-gray-200 dark:scrollbar-thumb-gray-900 dark:scrollbar-hover:scrollbar-thumb-gray-800
+}
+
+/* navLink 背景样式 */
+.bg-after-navLink {
+  &::after {
+    background:
+            radial-gradient(circle at 50% 170%, var(--color-primary-300), transparent 60%) padding-box,
+            linear-gradient(hsl(from var(--color-primary-600) h s l / .3) 0 0) padding-box,
+            linear-gradient(to bottom left, var(--color-primary-300), transparent 40%) border-box;
+  }
+
+  &:where(.dark, .dark *) {
+    &::after {
+      background:
+              radial-gradient(circle at 50% 170%, var(--color-primary-300), transparent 60%) padding-box,
+              linear-gradient(hsl(from var(--color-primary-600) h s l / .5) 0 0) padding-box,
+              url("https://images.unsplash.com/photo-1538370965046-79c0d6907d47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3NDY2MzU5NjF8&ixlib=rb-4.1.0&q=80&w=1200") fixed padding-box,
+              linear-gradient(to bottom left, var(--color-primary-300), transparent 40%) border-box;
+    }
+  }
 }
