@@ -251,7 +251,7 @@ Source: https://github.com/r4ai/remark-callout/blob/main/packages/website/src/pa
     }
 
     & > * {
-      @apply m-0;
+      /*@apply m-0;*/
     }
   }
 }

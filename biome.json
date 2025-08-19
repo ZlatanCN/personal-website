@@ -8,7 +8,7 @@
   "files": {
     "ignoreUnknown": false,
     "includes": [
-      "**/*.{js,jsx,ts,tsx,json,jsonc,css}",
+      "**/*.{js,jsx,ts,tsx,json,jsonc,css,cjs}",
       "!node_modules/**",
       "!.next/**",
       "!out/**",
@@ -16,7 +16,7 @@
       "!dist/**",
       "!coverage/**",
       "!*.min.js",
-      "!public/**/*.{js,jsx,ts,tsx,json,jsonc}",
+      "!public/**/*.{js,jsx,ts,tsx,json,jsonc,cjs}",
       "!.contentlayer/**",
       "!.vercel/**"
     ]

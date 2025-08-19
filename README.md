@@ -114,7 +114,7 @@ summary: '文章摘要'
 
 ### 主题配置
 
-编辑 `tailwind.config.js` 自定义颜色、字体等样式。
+编辑 `css/tailwind.css` 自定义颜色、字体等样式。
 
 ### 网站配置
 
