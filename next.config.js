@@ -1,6 +1,7 @@
 import bundleAnalyzer from '@next/bundle-analyzer'
 import { codeInspectorPlugin } from 'code-inspector-plugin'
 import { withContentlayer } from 'next-contentlayer2'
+import withRspack from 'next-rspack'
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
@@ -98,6 +99,6 @@ const nextConfig = {
   },
 }
 
-const plugins = [withContentlayer, withBundleAnalyzer]
+const plugins = [withContentlayer, withBundleAnalyzer, withRspack]
 
 export default plugins.reduce((acc, next) => next(acc), nextConfig)
