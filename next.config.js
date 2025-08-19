@@ -91,6 +91,10 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     reactCompiler: true,
+    browserDebugInfoInTerminal: true,
+    clientSegmentCache: true,
+    devtoolSegmentExplorer: true,
+    optimizeRouterScrolling: true,
   },
 }
 

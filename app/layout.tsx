@@ -64,6 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       className={`${space_grotesk.variable} scrollbar scrollbar-thumb overflow-auto scroll-smooth`}
+      data-scroll-behavior={'smooth'}
       lang={siteMetadata.language}
       suppressHydrationWarning
     >

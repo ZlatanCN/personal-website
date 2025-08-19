@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@headlessui/react": "2.2.0",
-    "@next/bundle-analyzer": "15.2.4",
+    "@next/bundle-analyzer": "15.4.7",
     "@r4ai/remark-callout": "^0.6.2",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/postcss": "^4.0.5",
@@ -27,14 +27,14 @@
     "hast-util-from-html-isomorphic": "^2.0.0",
     "image-size": "2.0.1",
     "mermaid": "^11.7.0",
-    "next": "15.2.4",
+    "next": "15.4.7",
     "next-contentlayer2": "0.5.5",
     "next-themes": "^0.4.6",
     "playwright": "^1.54.2",
     "pliny": "0.4.1",
     "postcss": "^8.4.24",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "reading-time": "1.5.0",
     "rehype-autolink-headings": "^7.1.0",
     "rehype-citation": "^2.3.0",
@@ -55,7 +55,7 @@
     "@svgr/webpack": "^8.0.1",
     "@toolwind/anchors": "^1.0.10",
     "@types/mdx": "^2.0.12",
-    "@types/react": "^19.0.8",
+    "@types/react": "19.1.10",
     "babel-plugin-react-compiler": "rc",
     "code-inspector-plugin": "^0.20.12",
     "critters": "^0.0.25",
@@ -69,5 +69,8 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,cjs}": ["biome check --write --no-errors-on-unmatched"]
   },
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@3.6.1",
+  "resolutions": {
+    "@types/react": "19.1.10"
+  }
 }
