@@ -29,8 +29,6 @@ const AuthorDetails = memo(({ authorDetails }: AuthorDetailsProps) => {
                   alt={'avatar'}
                   className={'h-10 w-10 rounded-full'}
                   height={38}
-                  loading={'eager'}
-                  priority={true}
                   src={author.avatar}
                   width={38}
                 />

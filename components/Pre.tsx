@@ -42,7 +42,7 @@ const Pre = ({ children }: PreProps) => {
       role={'region'}
     >
       <button
-        className={`absolute top-2 right-2 size-8 cursor-pointer rounded border-2 bg-transparent p-1 transition-opacity duration-200 ${
+        className={`absolute top-2 right-2 size-8 cursor-pointer rounded border-2 bg-transparent p-1 transition-opacity duration-300 ${
           hovered ? 'opacity-100' : 'opacity-0'
         } ${
           copied

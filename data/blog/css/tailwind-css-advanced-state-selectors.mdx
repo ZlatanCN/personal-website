@@ -1,0 +1,109 @@
+---
+title: Tailwind CSS 高级状态选择器
+tags: [CSS, group, has, peer, PseudoClass, TailwindCSS]
+summary: 本文深度剖析了 Tailwind CSS 中用于实现复杂交互式 UI 的高级状态选择器。内容系统性地阐述了 group（基于父级状态）、peer（基于同级状态）和 has（基于子级状态）的工作机制与应用场景，并涵盖了嵌套命名、条件化变体（如 group-has, not-*）等 v4 版本的最新特性。
+date: 2025-08-23
+lastmod: 2025-08-23
+---
+在现代 UI 开发中，构建响应用户交互的动态样式是核心需求。传统上，许多复杂的状态样式（如悬停在一个容器上时改变其子元素的样式）需要编写自定义的 CSS 甚至 JavaScript。Tailwind CSS 提供了一套强大的**状态修饰符 (State Modifiers)** 和**变体 (Variants)**，如 `group`, `peer`, `has-*` 和 `not-*`，它们极大地扩展了功能类的能力。这些工具允许开发者直接在 HTML 标记中，以声明式的方式创建丰富的、基于 DOM 元素间关系的交互式样式，而无需编写任何自定义 CSS。
+
+# `group`：基于父级状态样式化
+
+`group` 修饰符用于当父元素或祖先元素处于特定状态（如 `hover`, `focus`）时，对其后代元素应用样式。
+
+- **核心机制**:
+    1. 在希望作为“触发器”的父元素上添加 `group` 类。
+    2. 在希望被“控制”的子元素上，使用 `group-{variant}` 前缀。
+
+> [!example] `group-hover` 的典型应用
+> 当鼠标悬停在整个卡片 (`group`) 上时，标题文本 (`group-hover:text-blue-500`) 的颜色会发生变化。
+> ```html
+> <a href="#" class="group block p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100">
+>   <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 group-hover:text-blue-500">
+>     Card Title
+>   </h5>
+>   <p class="font-normal text-gray-700">
+>     Here is some content that does not change on hover.
+>   </p>
+> </a>
+> ```
+
+- **高级用法**:
+	- **基于子元素状态的 `group-has`**: 当 `group` 容器内**包含**某个处于特定状态的子元素时，可以对另一个子元素应用样式。
+	- **否定变体 `group-not`**: 当 `group` 容器**不处于**某个特定状态时，应用样式。
+	- **命名组 (Named Groups)**: 为了处理**嵌套**的 `group` 场景，可以为 `group` 命名。
+
+```html
+<div class="group/outer hover:bg-blue-100">
+  <div class="group/inner hover:bg-green-100">
+    <p class="group-hover/inner:text-green-500 group-hover/outer:text-blue-500">
+      Text
+    </p>
+  </div>
+</div>
+```
+
+在此例中，文本颜色会根据鼠标悬停在内层还是外层 `div` 上而发生不同的变化。
+
+# `peer`：基于同级状态样式化
+
+`peer` 修饰符的原理与 `group` 类似，但它用于根据**前置同级元素 (previous sibling)** 的状态来设置元素的样式。
+
+- **核心机制**:
+    1. 在作为“触发器”的同级元素上添加 `peer` 类。
+    2. 在希望被“控制”的、且**位于其后**的同级元素上，使用 `peer-{variant}` 前缀。
+
+> [!warning] DOM 顺序限制
+> `peer` 修饰符的底层实现依赖于 CSS 的后续兄弟组合器 (`~`)。因此，被 `peer-{variant}` 修饰的元素**必须**在 DOM 结构中位于 `peer` 元素**之后**。
+
+- **典型应用**：增强表单的可访问性。
+
+> [!example] `peer-invalid` 实现实时表单验证提示
+> ```html
+> <div class="relative">
+>   <input 
+>     type="email" 
+>     id="email" 
+>     class="peer block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 invalid:border-red-500" 
+>     placeholder="you@example.com" 
+>     required 
+>   />
+>   <p class="mt-2 invisible text-sm text-red-600 peer-invalid:visible">
+>     请输入有效的电子邮件地址。
+>   </p>
+> </div>
+> ```
+> 在这个例子中，提示文本 `<p>` 默认是不可见的 (`invisible`)。只有当它前面的同级 `<input>` 元素（被标记为 `peer`）进入 `:invalid` 状态时，`peer-invalid:visible` 才会被激活，使提示文本变得可见。
+
+- **高级用法**: 与 `group` 类似，`peer` 也支持**命名 (`peer/name`)**、**`peer-has`** 和 **`peer-not`** 等高级变体。
+
+# 新一代条件样式：`has-*` 与 `not-*`
+
+## `has-*` 变体 (父选择器)
+
+`has-*` 变体基于强大的 CSS `:has()` 伪类，它允许一个元素**根据其后代元素的状态**来改变自身的样式。这在 CSS 中被称为“父选择器”。
+
+```html
+<div class="has-[:checked]:bg-blue-100 has-[:checked]:border-blue-300 border rounded-md p-4">
+  <label>
+    <input type="checkbox" class="mr-2">
+    同意服务条款
+  </label>
+</div>
+```
+
+## `not-*` 变体 (否定变体)
+
+这是 Tailwind v4 引入的一个非常有用的变体，用于应用 **“默认”或“非激活”状态** 的样式，而无需编写额外的 CSS。
+
+- **机制**: `not-{variant}` 会在**不**满足 `{variant}` 条件时应用样式。
+- **典型应用**: 优雅地处理悬停状态的“进入”和“离开”。
+
+> [!example] `not-hover` 实现默认透明度
+> ```html
+> <button class="transition-opacity hover:opacity-100 not-hover:opacity-70">
+>   Submit
+> </button>
+> ```
+> 在 v4 之前，这种效果通常需要更复杂的 `opacity-70 hover:opacity-100` 写法，而 `not-hover` 提供了更强的语义和逻辑清晰度。
+

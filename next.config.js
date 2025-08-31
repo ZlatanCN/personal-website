@@ -84,7 +84,7 @@ const nextConfig = {
     })
 
     if (dev) {
-      config.plugins.push(codeInspectorPlugin({ bundler: 'webpack', editor: 'webstorm' }))
+      config.plugins.push(codeInspectorPlugin({ bundler: 'webpack', editor: 'code' }))
     }
 
     return config

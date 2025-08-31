@@ -1,7 +1,7 @@
 const postcssConfig = {
   plugins: {
     '@tailwindcss/postcss': {
-      optimize: false,
+      // optimize: false,
     },
   },
 }

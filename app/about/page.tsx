@@ -1,10 +1,11 @@
 import { genPageMetadata } from 'app/seo'
 import { type Authors, allAuthors } from 'contentlayer/generated'
+import type { Metadata } from 'next'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
 import { coreContent } from 'pliny/utils/contentlayer'
 import AuthorLayout from '@/layouts/AuthorLayout'
 
-export const metadata = genPageMetadata({ title: 'About' })
+export const metadata: Metadata = genPageMetadata({ title: 'About' })
 
 export default function Page() {
   const author = allAuthors.find(p => p.slug === 'default') as Authors

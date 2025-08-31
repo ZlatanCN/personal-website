@@ -20,7 +20,7 @@ const TableOfContents = memo(({ toc, activeId }: TableOfContentsProps) => {
           {toc.map(item => (
             <li key={item.value}>
               <Link
-                className={`block text-xs transition-colors duration-200 hover:text-primary-500 ${
+                className={`block text-xs transition-colors duration-300 hover:text-primary-500 ${
                   activeId == item.url.slice(1) ? 'text-primary-500' : ''
                 }`}
                 href={item.url}

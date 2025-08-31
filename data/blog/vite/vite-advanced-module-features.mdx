@@ -1,0 +1,98 @@
+---
+title: Vite 模块化的高级特性
+tags: [GlobImport, HMR, JavaScriptModules, TreeShaking, Vite]
+summary: 本文深度剖析了 Vite 中基于 ES 模块的各项高级特性。内容系统性地阐述了 import.meta 对象在访问环境变量 (.env) 和实现热模块替换 (.hot) 中的作用，并重点解析了 Vite 独有的、用于批量导入模块的 import.meta.glob 功能。笔记还涵盖了 JSON 具名导入、条件导入等优化实践。
+date: 2025-08-20
+lastmod: 2025-08-20
+draft: false
+---
+Vite 的构建哲学根植于其对原生 **ES 模块 (ECMAScript Modules, ESM)** 的深度整合与扩展。除了标准的 `import` 和 `export` 语法，Vite 还充分利用并增强了 `import.meta` 这一元属性，为开发者提供了一套强大的、用于与模块自身元数据、环境变量及构建管线进行交互的 API。
+
+# `import.meta` 对象：模块的元信息入口
+
+`import.meta` 是一个由 ECMAScript 规范定义的元属性，它是一个包含了当前模块相关元信息的对象。Vite 在此基础上扩展了多个独有的、极其有用的属性。
+
+## `import.meta.env`: 访问环境变量
+
+Vite 通过 `import.meta.env` 对象，将定义在项目根目录 `.env` 文件中的环境变量暴露给客户端代码。具体来说，在构建时，Vite 会静态地将代码中所有 `import.meta.env.VITE_...` 的引用，替换为其对应的值。
+
+> [!warning] `VITE_` 前缀要求
+> 出于安全考虑，只有以 `VITE_` 为前缀的变量才会被暴露给客户端代码。这是为了防止开发者意外地将包含敏感信息（如数据库密码）的服务器端环境变量泄露到前端。
+
+```js
+// .env.local 文件
+VITE_API_BASE_URL=https://api.example.com/
+
+// main.js 文件
+console.log('API Base URL:', import.meta.env.VITE_API_BASE_URL);
+
+// 构建后的代码会变为:
+// console.log('API Base URL:', "https://api.example.com/");
+```
+
+`import.meta.env.MODE` 和 `import.meta.env.DEV` 等内置变量，还可用于判断当前应用的运行模式（`development` 或 `production`）。
+
+## `import.meta.hot`: 集成热模块替换 (HMR)
+
+Vite 提供了第一等的**热模块替换 (Hot Module Replacement, HMR)** 支持。`import.meta.hot` 对象则暴露了 HMR API，允许一个模块定义当它自身或其依赖更新时，应该如何被“热替换”，而无需刷新整个页面。
+
+## `import.meta.url`: 获取模块 URL
+
+此属性返回当前模块的绝对 URL 路径（`file://...` 或 `http://...`）。它对于需要基于模块自身位置来解析其他资源（例如，创建一个 Worker 脚本）的场景非常有用。
+
+# Vite 独有的导入扩展
+
+## Glob Import: 批量模块导入
+
+`import.meta.glob` 是 Vite 提供的一个强大的、独有的扩展功能，它允许使用 Glob 模式（类似于文件系统的通配符）来一次性导入多个模块。
+
+- **默认行为 (Lazy Import)**: 默认情况下，`import.meta.glob` 执行的是**懒加载**。它返回一个对象，其中键是模块的相对路径，值是一个返回 `Promise` 的**动态导入函数**。
+
+```js
+// 懒加载所有 ./components 目录下的 JSX 组件
+const components = import.meta.glob('./components/*.jsx', { eager: false });
+
+async function renderComponent(name) {
+  const path = `./components/${name}.jsx`;
+  if (components[path]) {
+    // 仅在需要时，才真正执行导入并加载该组件模块
+    const module = await components[path]();
+    module.render();
+  }
+}
+```
+
+- **贪婪模式 (Eager Import)**: 如果希望直接导入所有模块，而不是懒加载，可以添加 `{ eager: true }` 选项。
+
+> [!tip] 懒加载 vs. 贪婪模式
+> - **`{ eager: false }` (默认)**: 返回 `{ './path': () => import(...) }`。适合按需加载，优化初始加载性能。
+> - **`{ eager: true }`**: 直接返回 `{ './path': Module }`。适合需要立即使用所有模块的场景。
+
+## JSON 具名导入 (Named JSON Imports)
+
+Vite 支持从 `.json` 文件中只导入部分字段，这可以有效地利用构建工具的**摇树优化 (tree-shaking)**，减小最终打包的体积。
+
+```js
+// package.json
+// { "name": "my-app", "version": "1.0.0" }
+
+// 只导入 version 字段
+import { version } from './package.json';
+
+console.log(version); // "1.0.0"
+```
+
+## 动态导入 (Dynamic Imports)
+
+Vite 原生支持标准的动态 `import()` 语法以实现代码分割。但需要注意的是，为了让 Vite 在构建时能够分析依赖，动态导入的路径**必须包含一个静态的基础路径**。
+
+```js
+// ✅ 可行的动态导入
+const module = await import(`./locales/${lang}.json`);
+
+// ❌ 不可行的动态导入 (Vite 无法预测变量的可能值)
+// const path = './locales/en.json';
+// const module = await import(path);
+```
+
+对于需要完全动态路径的复杂场景，可以使用 `vite-plugin-dynamic-import` 等社区插件。

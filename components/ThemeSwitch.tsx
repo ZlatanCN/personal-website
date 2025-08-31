@@ -27,20 +27,22 @@ const ThemeSwitch = memo(() => {
 
   return (
     <div className={'flex items-center'}>
-      <button
-        aria-label={'Theme switcher'}
-        className={'flex items-center justify-center rounded-md p-2'}
-        onClick={handleThemeChange}
-        type={'button'}
-      >
+      <div className={'flex items-center justify-center rounded-md p-2'}>
         {mounted ? (
-          <div className={'relative h-6 w-6 hover:text-primary-500 dark:hover:text-primary-400'}>
+          <button
+            aria-label={'Theme switcher'}
+            className={
+              'relative h-6 w-6 transition-colors duration-300 hover:text-primary-500 dark:hover:text-primary-400'
+            }
+            onClick={handleThemeChange}
+            type={'button'}
+          >
             {/* Monitor Icon - System Theme */}
             <Transition
-              enter={'transition-all duration-200 ease-out'}
+              enter={'transition-all duration-300 ease-out'}
               enterFrom={'scale-50 rotate-90 opacity-0'}
               enterTo={'scale-100 rotate-0 opacity-100'}
-              leave={'transition-all duration-200 ease-in'}
+              leave={'transition-all duration-300 ease-in'}
               leaveFrom={'scale-100 rotate-0 opacity-100'}
               leaveTo={'scale-50 rotate-90 opacity-0'}
               show={theme === 'system'}
@@ -52,10 +54,10 @@ const ThemeSwitch = memo(() => {
 
             {/* Sun Icon - Light Theme */}
             <Transition
-              enter={'transition-all duration-200 ease-out'}
+              enter={'transition-all duration-300 ease-out'}
               enterFrom={'scale-50 rotate-90 opacity-0'}
               enterTo={'scale-100 rotate-0 opacity-100'}
-              leave={'transition-all duration-200 ease-in'}
+              leave={'transition-all duration-300 ease-in'}
               leaveFrom={'scale-100 rotate-0 opacity-100'}
               leaveTo={'scale-50 rotate-90 opacity-0'}
               show={theme === 'light'}
@@ -67,10 +69,10 @@ const ThemeSwitch = memo(() => {
 
             {/* Moon Icon - Dark Theme */}
             <Transition
-              enter={'transition-all duration-200 ease-out'}
+              enter={'transition-all duration-300 ease-out'}
               enterFrom={'scale-50 rotate-90 opacity-0'}
               enterTo={'scale-100 rotate-0 opacity-100'}
-              leave={'transition-all duration-200 ease-in'}
+              leave={'transition-all duration-300 ease-in'}
               leaveFrom={'scale-100 rotate-0 opacity-100'}
               leaveTo={'scale-50 rotate-90 opacity-0'}
               show={theme === 'dark'}
@@ -79,11 +81,11 @@ const ThemeSwitch = memo(() => {
                 <Moon />
               </div>
             </Transition>
-          </div>
+          </button>
         ) : (
           <Blank />
         )}
-      </button>
+      </div>
     </div>
   )
 })

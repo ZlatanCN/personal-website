@@ -1,0 +1,140 @@
+---
+title: Tailwind CSS v4 架构
+tags: [CSS, Frontend, FrontendBuildTools, TailwindCSS, UtilityFirst]
+summary: 本文深度剖析了 Tailwind CSS v4 的核心架构与工程实践。内容系统性地阐述了其 Utility-First 哲学，并重点解析了 v4 全新的 Rust 内核引擎 (Oxide) 的工作原理——包括其源码扫描、JIT 生成机制，以及对动态类名的处理。笔记还详述了 @theme、@apply 和 @source 等新指令的最佳实践。
+date: 2025-08-21
+lastmod: 2025-08-24
+draft: false
+---
+Tailwind CSS 是一个采用 **Utility-First (功能类优先)** 理念的、高度可定制化的 CSS 框架。它通过提供一组原子化的、单一职责的 CSS 类，使开发者能够直接在 HTML 中快速构建复杂的用户界面。Tailwind CSS v4 标志着一次重大的架构演进，引入了基于 Rust 的全新高性能引擎 (Oxide)，并采用了更简洁、更强大的 CSS 原生语法进行配置，旨在提供极致的性能和更优的开发者体验。
+
+# 核心哲学：Utility-First
+
+> [!note] Utility-First 的精确定义
+> Utility-First 是一种 CSS 方法论，其核心在于**通过组合大量低级别的、单一功能的“功能类”来构建 UI**，而不是为每个组件编写单独的、语义化的 CSS 类。例如，直接在 HTML 中使用 `.flex`, `.pt-4`, `.text-center`，而不是在 CSS 文件中定义一个 `.card` 类。
+> 
+> 其最终产物的高效性（即移除未使用的类），是 JIT (Just-in-Time) 引擎对此方法论应用的**结果**
+
+- **优势**: 快速原型设计、避免样式副作用（作用域被天然限制在元素上）、高度的可重用性与可维护性。
+- **劣势**: 可能导致 HTML 类名冗长、存在一定的学习曲线、以及对传统 CSS 语义化的颠覆。
+
+# Tailwind CSS v4 引擎 (Oxide) 工作原理
+
+Tailwind CSS v4 引入了基于 Rust 的全新 JIT 引擎，名为 Oxide，它统一了开发和构建过程，并带来了显著的性能提升。
+
+## 单一入口与 CSS 层叠
+
+在 v4 中，整个框架通过一个简单的 `@import` 语句注入到主 CSS 文件中，它会自动引入四个逻辑**层 (layers)**。
+
+```css
+/* main.css */
+@import "tailwindcss";
+```
+
+这四个层定义了 CSS 规则的优先级顺序，从低到高依次为：
+
+- **`@theme`**: 用于定义设计令牌 (design tokens)，如颜色、间距、字体大小等。
+- **`@layer base`**: 用于定义基础元素的默认样式（类似于 reset.css）。
+- **`@layer components`**: 用于定义可复用的组件类，例如 `.btn`。
+- **`@utilities`**: 用于定义一次性的功能类，例如 `.p-4`。
+
+## JIT 引擎的扫描与生成
+
+v4 引擎的工作流程极其高效，分为三步：
+
+1. **扫描源码**: 引擎将所有源文件（HTML, JS, JSX, Vue 等）作为**纯文本 (plain text)** 读取，**不进行任何语法解析 (parsing)**。
+2. **提取候选类**: 使用正则表达式等高效方式，从文本中提取出所有可能是 Tailwind 功能类的字符串。
+3. **生成 CSS**: 仅为那些被识别出的、合法的功能类生成对应的 CSS 规则，并注入到最终的样式表中。
+
+## 源码扫描配置 (`@source`)
+
+v4 允许直接在 CSS 文件中通过 `@source` 规则来配置需要扫描的文件路径，替代了旧版的 `tailwind.config.js` 中的 `content` 选项。
+
+```css
+/* main.css */
+@import "tailwindcss";
+
+/* 显式注册扫描路径 */
+@source "./src/**/*.jsx";
+
+/* 设置基础路径 */
+@source "source('./src')";
+
+/* 排除特定路径 */
+@source not "./src/vendor/**/*.js";
+```
+
+## 处理动态类名
+
+由于引擎只进行文本扫描而不执行 JavaScript，因此**无法处理拼接而成的动态类名**。
+
+```js
+// ❌ 错误：引擎无法识别这个类名
+const color = 'blue';
+const className = `text-${color}-600`; // V4 无法解析
+```
+
+> [!important] 动态类名的正确实践
+> 应始终在代码中**包含完整的、静态的类名字符串**，让 Tailwind 能够检测到它们。
+> ```js
+> // ✅ 正确：通过条件判断返回完整的类名
+> function getTextColor(color) {
+>   if (color === 'blue') return 'text-blue-600';
+>   if (color === 'red') return 'text-red-600';
+> }
+> ```
+
+对于某些由 JS 动态生成、无法被静态扫描到的类，可以使用 `@source inline()` 来强制生成，这取代了 v3 中的 `safelist` 配置。
+
+```css
+@source inline(".flex", ".flex-col");
+```
+
+# v4 最佳实践
+
+## 使用 `@theme` 定义设计令牌
+
+v4 提倡直接在 CSS 中使用 `@theme` 规则来定义和扩展设计系统，取代了 `tailwind.config.js` 中的 `theme` 对象。
+
+> [!example] 在 CSS 中定义主题
+> ```css
+> @import "tailwindcss";
+> 
+> @layer theme {
+>   :root {
+>     --color-brand: #5f27cd;
+>     --spacing-4xl: 12rem;
+>     --font-family-serif: "Georgia", serif;
+>   }
+> }
+> ```
+
+这种方式使得设计系统与样式表本身更加内聚。
+
+## 精准使用 `@apply` 与 `@utility`
+
+`@apply` 用于将一系列功能类组合成一个新的 CSS 规则，但其在 v4 中的行为有所变化。
+
+- **`@layer components` 中的 `@apply`**: 用于组合**不带变体 (variants)** 的基础样式。
+- **`@utility`**: 如果你需要让自定义的类能够响应 Tailwind 的变体（如 `hover:`, `focus:`, `md:`），则必须使用 `@utility` 规则来定义。
+
+```css
+@import "tailwindcss";
+
+@layer components {
+  .btn-base {
+    @apply px-4 py-2 rounded-md font-semibold;
+  }
+}
+
+@utility btn-blue {
+  @apply bg-blue-500 text-white;
+}
+```
+
+> [!tip] 组合使用
+> 一个推荐的模式是在组件层定义基础样式，在功能层定义颜色等可变样式。
+> ```css
+> <button class="btn-base hover:btn-blue">Click Me</button>
+> ```
+

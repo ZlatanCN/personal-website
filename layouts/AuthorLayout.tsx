@@ -2,6 +2,7 @@ import type { Authors } from 'contentlayer/generated'
 import type { ReactNode } from 'react'
 import Image from '@/components/Image'
 import SocialIcon from '@/components/social-icons'
+import avatarImage from '/public/static/images/avatar.avif'
 
 interface Props {
   children: ReactNode
@@ -27,11 +28,11 @@ export default function AuthorLayout({ children, content }: Props) {
           {avatar && (
             <Image
               alt={'avatar'}
+              blurDataURL={avatarImage.blurDataURL}
               className={'h-48 w-48 rounded-full'}
               height={192}
-              loading={'eager'}
-              priority={true}
-              src={avatar}
+              placeholder={'blur'}
+              src={avatarImage.src}
               width={192}
             />
           )}

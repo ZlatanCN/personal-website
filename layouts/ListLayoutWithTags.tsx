@@ -101,7 +101,7 @@ export default function ListLayoutWithTags({
       <div className={'flex sm:space-x-24'}>
         <div
           className={
-            'scrollbar scrollbar-w-2 scrollbar-thumb hidden h-full max-h-screen min-w-[280px] max-w-[280px] flex-wrap overflow-auto rounded-sm bg-gray-50 pt-5 shadow-md sm:flex dark:bg-gray-900/70 dark:shadow-gray-800/40'
+            'scrollbar scrollbar-w-2 scrollbar-thumb hidden h-full max-h-screen min-w-[280px] max-w-[280px] flex-wrap overflow-auto rounded-sm bg-gray-50 pt-5 sm:flex dark:bg-gray-900/70 dark:shadow-gray-800/40'
           }
         >
           <div className={'px-6 py-4'}>
