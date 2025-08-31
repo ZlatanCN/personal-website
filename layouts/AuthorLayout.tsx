@@ -2,7 +2,7 @@ import type { Authors } from 'contentlayer/generated'
 import type { ReactNode } from 'react'
 import Image from '@/components/Image'
 import SocialIcon from '@/components/social-icons'
-import avatarImage from '/public/static/images/avatar.avif'
+import avatarImage from '/public/static/images/avatar.webp'
 
 interface Props {
   children: ReactNode
